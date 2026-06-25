@@ -2,10 +2,9 @@
 #define AppPublisher "Офис пенсионера"
 #define AppURL "https://github.com/andrey1b/HomeAccounting"
 #define AppExeName "HomeAccounting.exe"
-#define DotNetUrl "https://dotnet.microsoft.com/download/dotnet/8.0/runtime"
 ; Версия берётся из build-системы через /DAppVersion=x.y.z
 #ifndef AppVersion
-  #define AppVersion "4.2.1"
+  #define AppVersion "4.2.2"
 #endif
 
 [Setup]
@@ -31,6 +30,9 @@ MinVersion=10.0.17763
 [Languages]
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 
+[CustomMessages]
+russian.PreparingDotNet=Установка Microsoft .NET 8 (один раз, занимает 1-2 минуты)...
+
 [Tasks]
 Name: "desktopicon"; Description: "Создать значок на рабочем столе"; GroupDescription: "Дополнительные параметры:"; Flags: unchecked
 
@@ -54,7 +56,6 @@ Filename: "{sys}\netsh.exe"; \
     Flags: runhidden
 
 [Code]
-// Проверяем наличие .NET 8 Desktop Runtime
 function IsDotNet8Installed(): Boolean;
 var
   KeyPath: String;
@@ -72,20 +73,30 @@ begin
       end;
 end;
 
-function InitializeSetup(): Boolean;
+// Вызывается перед установкой — скачивает и ставит .NET 8 автоматически
+function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
+  TmpFile, Params: String;
   ErrCode: Integer;
 begin
-  Result := True;
-  if not IsDotNet8Installed() then
-  begin
-    if MsgBox(
-      '.NET 8 Desktop Runtime не найден.' + #13#10 +
-      'Программа требует его для работы.' + #13#10#13#10 +
-      'Нажмите OK, чтобы открыть страницу загрузки Microsoft,' + #13#10 +
-      'скачайте и установите runtime, затем запустите этот установщик снова.',
-      mbInformation, MB_OKCANCEL) = IDOK then
-      ShellExec('open', '{#DotNetUrl}', '', '', SW_SHOW, ewNoWait, ErrCode);
-    Result := False;
-  end;
+  Result := '';
+  if IsDotNet8Installed() then Exit;
+
+  WizardForm.PreparingLabel.Caption := CustomMessage('PreparingDotNet');
+
+  TmpFile := ExpandConstant('{tmp}\dotnet8desktop.exe');
+  Params  :=
+    '-NoProfile -Command "' +
+    '[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; ' +
+    'Invoke-WebRequest -Uri ' +
+    '''https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe'' ' +
+    '-OutFile ''' + TmpFile + '''"';
+
+  Exec('powershell.exe', Params, '', SW_HIDE, ewWaitUntilTerminated, ErrCode);
+
+  if FileExists(TmpFile) then
+    Exec(TmpFile, '/quiet /norestart', '', SW_HIDE, ewWaitUntilTerminated, ErrCode)
+  else
+    Result := 'Не удалось загрузить Microsoft .NET 8.' + #13#10 +
+              'Проверьте подключение к интернету и повторите установку.';
 end;
