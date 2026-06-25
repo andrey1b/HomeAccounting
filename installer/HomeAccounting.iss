@@ -24,7 +24,6 @@ SolidCompression=yes
 WizardStyle=modern
 ; Нужны права администратора для правила брандмауэра
 PrivilegesRequired=admin
-SetupIconFile=..\Resources\app.ico
 UninstallDisplayIcon={app}\{#AppExeName}
 ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0.17763
