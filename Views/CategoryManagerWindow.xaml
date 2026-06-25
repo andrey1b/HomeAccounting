@@ -1,0 +1,38 @@
+<Window x:Class="HomeAccounting.Views.CategoryManagerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="580" Height="460" WindowStartupLocation="CenterOwner">
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="8"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Categories -->
+        <DockPanel Grid.Column="0">
+            <TextBlock x:Name="TbLblCategories" DockPanel.Dock="Top" FontWeight="Bold" Margin="0,0,0,4"/>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal"
+                        HorizontalAlignment="Center" Margin="0,6,0,0">
+                <Button x:Name="BtnAddCatBtn"    Padding="10,4" Margin="0,0,6,0" Click="BtnAddCat_Click"/>
+                <Button x:Name="BtnRenameCatBtn" Padding="10,4" Margin="0,0,6,0" Click="BtnRenameCat_Click"/>
+                <Button x:Name="BtnDeleteCatBtn" Padding="10,4"                   Click="BtnDeleteCat_Click"/>
+            </StackPanel>
+            <ListBox x:Name="LbCategories" SelectionChanged="LbCategories_SelectionChanged"/>
+        </DockPanel>
+
+        <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
+
+        <!-- Subcategories -->
+        <DockPanel Grid.Column="2">
+            <TextBlock x:Name="TbLblSubcategories" DockPanel.Dock="Top" FontWeight="Bold" Margin="0,0,0,4"/>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal"
+                        HorizontalAlignment="Center" Margin="0,6,0,0">
+                <Button x:Name="BtnAddSubBtn"    Padding="10,4" Margin="0,0,6,0" Click="BtnAddSub_Click"/>
+                <Button x:Name="BtnRenameSubBtn" Padding="10,4" Margin="0,0,6,0" Click="BtnRenameSub_Click"/>
+                <Button x:Name="BtnDeleteSubBtn" Padding="10,4"                   Click="BtnDeleteSub_Click"/>
+            </StackPanel>
+            <ListBox x:Name="LbSubcategories"/>
+        </DockPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,46 @@
+<Window x:Class="HomeAccounting.Views.LoadQrWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Загрузить QR-код чека"
+        Width="500" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow" ResizeMode="NoResize"
+        ShowInTaskbar="False">
+    <Grid Margin="16,12,16,14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,6">
+            <TextBlock x:Name="TbUrlLabel" FontWeight="SemiBold" Margin="0,0,0,2"/>
+            <TextBlock FontSize="11" Foreground="#666" TextWrapping="Wrap"
+                       Text="Откройте QR-код чека камерой телефона или любым сканером — скопируйте полученную ссылку и вставьте сюда. Ссылка начинается с cabinet.tax.gov.ua"/>
+        </StackPanel>
+
+        <TextBox x:Name="TbUrl" Grid.Row="1"
+                 TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                 AcceptsReturn="False" VerticalContentAlignment="Top"
+                 FontFamily="Consolas" FontSize="11" Padding="4"/>
+
+        <WrapPanel Grid.Row="2" Margin="0,8,0,4">
+            <Button x:Name="BtnPasteText"   Padding="10,4" Margin="0,0,6,4" Click="BtnPasteText_Click"/>
+            <Button x:Name="BtnQrClipboard" Padding="10,4" Margin="0,0,6,4" Click="BtnQrClipboard_Click"/>
+            <Button x:Name="BtnQrFile"      Padding="10,4" Margin="0,0,0,4" Click="BtnQrFile_Click"/>
+        </WrapPanel>
+
+        <TextBlock x:Name="TbStatus" Grid.Row="3"
+                   FontSize="11" Margin="0,0,0,12"
+                   TextWrapping="Wrap" MinHeight="16"/>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="BtnOk"     IsDefault="True" MinWidth="130" Padding="12,5"
+                    Margin="0,0,8,0" Click="BtnOk_Click"/>
+            <Button x:Name="BtnCancel" IsCancel="True"  MinWidth="80"  Padding="12,5"
+                    Click="BtnCancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>HomeAccounting</RootNamespace>
+    <AssemblyName>HomeAccounting_v4.2.0</AssemblyName>
+    <StartupObject>HomeAccounting.App</StartupObject>
+    <Version>4.2.0</Version>
+    <FileVersion>4.2.0.0</FileVersion>
+    <Copyright>Офис пенсионера</Copyright>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+  </PropertyGroup>
+  <!-- WinForms ImplicitUsings конфликтуют с WPF типами — убираем их -->
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms"/>
+    <Using Remove="System.Drawing"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="ClosedXML" Version="0.102.3" />
+    <PackageReference Include="QRCoder" Version="1.4.3" />
+    <PackageReference Include="ZXing.Net" Version="0.16.9" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\comfortbuh.apk">
+      <LogicalName>comfortbuh.apk</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

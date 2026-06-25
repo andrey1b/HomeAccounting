@@ -1,0 +1,152 @@
+<Window x:Class="HomeAccounting.Views.SplashWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False"
+        Width="750" Height="420">
+
+    <Window.Resources>
+        <Style x:Key="SplashLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+        </Style>
+    </Window.Resources>
+
+    <Border BorderBrush="#5A82C8" BorderThickness="2">
+        <Grid>
+            <!-- Фон: вертикальный тёмно-синий градиент -->
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#1C3760" Offset="0"/>
+                        <GradientStop Color="#0B1C3A" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+
+            <!-- Синяя полоска сверху -->
+            <Rectangle Height="6" VerticalAlignment="Top"
+                       Fill="#3A82C8"/>
+
+            <Grid Margin="36,20,36,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>  <!-- Шапка: иконка + название -->
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="1"/>     <!-- Разделитель -->
+                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="*"/>     <!-- Блок предупреждения -->
+                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="Auto"/>  <!-- Прогресс-бар -->
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="Auto"/>  <!-- Статус / copyright -->
+                </Grid.RowDefinitions>
+
+                <!-- ── Шапка ── -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+
+                    <!-- Иконка домика через Path -->
+                    <Canvas Width="64" Height="72" Margin="0,0,18,0">
+                        <!-- Крыша -->
+                        <Polygon Points="0,28 32,0 64,28"
+                                 Fill="#4A96D8" Stroke="#6AB8F0" StrokeThickness="1"/>
+                        <!-- Стены -->
+                        <Rectangle Canvas.Left="8" Canvas.Top="28"
+                                   Width="48" Height="38"
+                                   Fill="#2E72B0"/>
+                        <!-- Дверь -->
+                        <Rectangle Canvas.Left="22" Canvas.Top="46"
+                                   Width="18" Height="20"
+                                   Fill="#0D2550"/>
+                        <!-- Монетка -->
+                        <Ellipse Canvas.Left="38" Canvas.Top="28"
+                                 Width="26" Height="26"
+                                 Fill="#F5BC26"/>
+                        <TextBlock Canvas.Left="42" Canvas.Top="30"
+                                   Text="₴" FontSize="14" FontWeight="Bold"
+                                   Foreground="#8C5A00" FontFamily="Segoe UI"/>
+                    </Canvas>
+
+                    <!-- Название и версия -->
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Домашний бюджет"
+                                   FontSize="32" FontWeight="Bold"
+                                   FontFamily="Segoe UI"
+                                   Foreground="White"/>
+                        <TextBlock x:Name="TbVersion"
+                                   Text="v 4.1.9"
+                                   FontSize="15" FontFamily="Segoe UI"
+                                   Foreground="#96C4FF" Margin="2,4,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- ── Разделитель ── -->
+                <Rectangle Grid.Row="2" Height="1"
+                           Fill="#30FFFFFF"/>
+
+                <!-- ── Блок предупреждения ── -->
+                <Border Grid.Row="4"
+                        Background="#18FFC832"
+                        BorderBrush="#55FFC832" BorderThickness="1"
+                        CornerRadius="4" Padding="18,14">
+                    <StackPanel>
+                        <!-- Заголовок -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <!-- Треугольник ⚠ через Path -->
+                            <Path Margin="0,1,10,0" VerticalAlignment="Top"
+                                  Fill="#FFC832"
+                                  Data="M 12,0 L 24,22 L 0,22 Z"/>
+                            <TextBlock Text="!"
+                                       FontSize="11" FontWeight="Bold"
+                                       Foreground="#2A1A00"
+                                       Margin="-21,3,0,0"/>
+                            <TextBlock Text="Предупреждение брандмауэра Windows"
+                                       FontSize="13" FontWeight="SemiBold"
+                                       FontFamily="Segoe UI"
+                                       Foreground="#FFD840"
+                                       Margin="10,0,0,0"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Текст 1 -->
+                        <TextBlock TextWrapping="Wrap"
+                                   FontFamily="Segoe UI" FontSize="13"
+                                   Foreground="#DDD5EF" Margin="0,0,0,8">
+                            При запуске программа откроет сетевой порт <Run FontWeight="Bold">8772</Run>
+                            для приёма фискальных чеков с телефона (приложение ComfortBuh).
+                        </TextBlock>
+
+                        <!-- Текст 2 -->
+                        <TextBlock TextWrapping="Wrap"
+                                   FontFamily="Segoe UI" FontSize="13"
+                                   Foreground="#DDD5EF">
+                            Если Windows запросит разрешение на доступ к сети — нажмите
+                            <Run FontWeight="Bold" Foreground="#FFD840">«Разрешить доступ»</Run>.
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Прогресс-бар ── -->
+                <ProgressBar Grid.Row="6"
+                             Height="8" IsIndeterminate="True"
+                             Background="#22FFFFFF"
+                             Foreground="#4AB0FF"/>
+
+                <!-- ── Статус + copyright ── -->
+                <Grid Grid.Row="8">
+                    <TextBlock x:Name="TbStatus"
+                               Text="Инициализация…"
+                               FontFamily="Segoe UI" FontSize="11"
+                               Foreground="#7090B8"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Text="© Офис пенсионера 2026"
+                               FontFamily="Segoe UI" FontSize="10"
+                               Foreground="#405070"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

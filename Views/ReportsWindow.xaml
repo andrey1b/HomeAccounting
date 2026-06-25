@@ -1,0 +1,117 @@
+<Window x:Class="HomeAccounting.Views.ReportsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="860" Height="580" WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="8">
+        <TabControl x:Name="ReportTabs" SelectionChanged="ReportTabs_SelectionChanged">
+
+            <!-- ===== TAB 1: По категоріях ===== -->
+            <TabItem x:Name="TabByCategory">
+                <DockPanel Margin="8">
+                    <!-- Filter bar -->
+                    <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                        <TextBlock x:Name="TbLblFrom"    VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <DatePicker x:Name="DpFrom" Width="120" Margin="0,0,8,0"/>
+                        <TextBlock x:Name="TbLblTo"      VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <DatePicker x:Name="DpTo"   Width="120" Margin="0,0,8,0"/>
+                        <TextBlock x:Name="TbLblAccount" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <ComboBox x:Name="CbAccount" Width="120" DisplayMemberPath="Name" Margin="0,0,8,0"/>
+                        <TextBlock x:Name="TbLblRptCategory" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <ComboBox x:Name="CbRptCategory" Width="120" DisplayMemberPath="Name" Margin="0,0,8,0"
+                                  SelectionChanged="CbRptCategory_SelectionChanged"/>
+                        <TextBlock x:Name="TbLblRptSubcategory" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <ComboBox x:Name="CbRptSubcategory" Width="120" DisplayMemberPath="Name" Margin="0,0,8,0"/>
+                        <RadioButton x:Name="RbExpenses" IsChecked="True" VerticalAlignment="Center" Margin="0,0,8,0"
+                                     Checked="RbRptType_Checked"/>
+                        <RadioButton x:Name="RbIncomes"  VerticalAlignment="Center" Margin="0,0,8,0"
+                                     Checked="RbRptType_Checked"/>
+                        <Button x:Name="BtnShow" Width="80" Click="BtnShow_Click"/>
+                    </WrapPanel>
+
+                    <!-- Summary -->
+                    <Border DockPanel.Dock="Bottom" BorderBrush="#ccc" BorderThickness="1" CornerRadius="4"
+                            Padding="8,4" Margin="0,8,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock x:Name="TbLblTotal"   FontWeight="Bold" Margin="0,0,2,0"/>
+                            <TextBlock x:Name="TbTotal"      FontWeight="Bold" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="TbLblRecords" Margin="0,0,2,0"/>
+                            <TextBlock x:Name="TbCount"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- DataGrid -->
+                    <DataGrid x:Name="DgByCategory" AutoGenerateColumns="False" IsReadOnly="True"
+                              GridLinesVisibility="Horizontal" AlternatingRowBackground="#f9f9f9">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="ColRptCat"     Binding="{Binding CategoryName}"    Width="*"/>
+                            <DataGridTextColumn x:Name="ColRptSub"     Binding="{Binding SubcategoryName}" Width="*"/>
+                            <DataGridTextColumn x:Name="ColRptRecords" Binding="{Binding Count}"           Width="80"
+                                                ElementStyle="{StaticResource RightCell}"/>
+                            <DataGridTextColumn x:Name="ColRptAmount"  Binding="{Binding TotalStr}"        Width="120"
+                                                ElementStyle="{StaticResource RightCell}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+
+            <!-- ===== TAB 2: По датах ===== -->
+            <TabItem x:Name="TabByDate">
+                <Grid Margin="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="210"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Left: DataGrid + summary -->
+                    <DockPanel Grid.Column="0" Margin="0,0,8,0">
+                        <Border DockPanel.Dock="Bottom" BorderBrush="#ccc" BorderThickness="1" CornerRadius="4"
+                                Padding="8,4" Margin="0,8,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="TbLblDateTotal"   FontWeight="Bold" Margin="0,0,2,0"/>
+                                <TextBlock x:Name="TbDateTotal"      FontWeight="Bold" Margin="0,0,16,0"/>
+                                <TextBlock x:Name="TbLblDateRecords" Margin="0,0,2,0"/>
+                                <TextBlock x:Name="TbDateCount"/>
+                            </StackPanel>
+                        </Border>
+                        <DataGrid x:Name="DgByDate" AutoGenerateColumns="False" IsReadOnly="True"
+                                  GridLinesVisibility="Horizontal" AlternatingRowBackground="#f9f9f9">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn x:Name="ColDatePeriod"  Binding="{Binding Period}"   Width="*"/>
+                                <DataGridTextColumn x:Name="ColDateRecords" Binding="{Binding Count}"    Width="80"
+                                                    ElementStyle="{StaticResource RightCell}"/>
+                                <DataGridTextColumn x:Name="ColDateAmount"  Binding="{Binding TotalStr}" Width="130"
+                                                    ElementStyle="{StaticResource RightCell}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+
+                    <!-- Right: Controls -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Top">
+                        <TextBlock x:Name="TbLblGroupBy" FontWeight="Bold" Margin="0,4,0,4"/>
+                        <RadioButton x:Name="RbGroupDays"   IsChecked="True" Margin="0,2,0,2"/>
+                        <RadioButton x:Name="RbGroupWeeks"  Margin="0,2,0,2"/>
+                        <RadioButton x:Name="RbGroupMonths" Margin="0,2,0,8"/>
+
+                        <Separator Margin="0,0,0,8"/>
+
+                        <TextBlock x:Name="TbLblDateFrom" Margin="0,0,0,4"/>
+                        <DatePicker x:Name="DpDateFrom" Margin="0,0,0,8"/>
+                        <TextBlock x:Name="TbLblDateTo" Margin="0,0,0,4"/>
+                        <DatePicker x:Name="DpDateTo" Margin="0,0,0,8"/>
+
+                        <Separator Margin="0,0,0,8"/>
+
+                        <RadioButton x:Name="RbDateExpenses" IsChecked="True" Margin="0,2,0,2"/>
+                        <RadioButton x:Name="RbDateIncomes"  Margin="0,2,0,8"/>
+
+                        <TextBlock x:Name="TbLblDateAccount" Margin="0,0,0,4"/>
+                        <ComboBox x:Name="CbDateAccount" DisplayMemberPath="Name" Margin="0,0,0,12"/>
+
+                        <Button x:Name="BtnShowByDate" Click="BtnShowByDate_Click" HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </DockPanel>
+</Window>

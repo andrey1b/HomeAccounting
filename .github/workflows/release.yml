@@ -1,0 +1,68 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'          # запускается при git tag v4.2.0 && git push --tags
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Extract version from tag
+        id: ver
+        shell: bash
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Update version in csproj
+        shell: pwsh
+        run: |
+          $v = "${{ steps.ver.outputs.VERSION }}"
+          (Get-Content HomeAccounting.csproj) `
+            -replace '<Version>.*</Version>',       "<Version>$v</Version>" `
+            -replace '<FileVersion>.*</FileVersion>',"<FileVersion>$v.0</FileVersion>" `
+            -replace '<AssemblyName>.*</AssemblyName>',"<AssemblyName>HomeAccounting_v$v</AssemblyName>" |
+          Set-Content HomeAccounting.csproj
+
+      - name: Publish self-contained exe
+        run: |
+          dotnet publish HomeAccounting.csproj -c Release -r win-x64 --self-contained `
+            -p:PublishSingleFile=true -o publish
+
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $v = "${{ steps.ver.outputs.VERSION }}"
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
+            /DAppVersion=$v `
+            installer\HomeAccounting.iss
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Домашний бюджет ${{ github.ref_name }}"
+          body: |
+            ## Домашний бюджет ${{ github.ref_name }}
+
+            ### Установка
+            1. Скачайте `HomeAccounting_Setup_${{ steps.ver.outputs.VERSION }}.exe`
+            2. Запустите от имени администратора
+            3. Следуйте инструкциям установщика
+
+            ### Что нового
+            _Заполните описание изменений вручную или добавьте CHANGELOG.md_
+          files: installer-out/HomeAccounting_Setup_${{ steps.ver.outputs.VERSION }}.exe
+          draft: false
+          prerelease: false

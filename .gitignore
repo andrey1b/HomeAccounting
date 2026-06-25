@@ -1,0 +1,31 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.rsuser
+
+# Rider
+.idea/
+
+# Публикация и дистрибутивы (собираются CI/CD)
+publish/
+Distributions/
+
+# База данных пользователя — НИКОГДА в репозиторий
+*.db
+*.db-shm
+*.db-wal
+ha_settings.json
+
+# Временные файлы
+*.tmp
+*.log
+last_receipt.xml
+
+# OS
+Thumbs.db
+.DS_Store
