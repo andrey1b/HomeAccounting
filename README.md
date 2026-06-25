@@ -29,12 +29,13 @@
 ## Требования
 
 - Windows 10 / 11 (x64)
+- [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) — если не установлен, установщик подскажет сам
 - Права администратора при установке (для правила брандмауэра)
 
 ## Сборка из исходников
 
 ```
-dotnet publish HomeAccounting.csproj -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o publish
+dotnet publish HomeAccounting.csproj -c Release -r win-x64 --no-self-contained -p:PublishSingleFile=true -o publish
 ```
 
 ## Лицензия

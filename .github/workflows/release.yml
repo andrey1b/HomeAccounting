@@ -35,9 +35,9 @@ jobs:
             -replace '<AssemblyName>.*</AssemblyName>',"<AssemblyName>HomeAccounting_v$v</AssemblyName>" |
           Set-Content HomeAccounting.csproj
 
-      - name: Publish self-contained exe
+      - name: Publish framework-dependent exe
         run: |
-          dotnet publish HomeAccounting.csproj -c Release -r win-x64 --self-contained `
+          dotnet publish HomeAccounting.csproj -c Release -r win-x64 --no-self-contained `
             -p:PublishSingleFile=true -o publish
 
       - name: Install Inno Setup
@@ -51,6 +51,14 @@ jobs:
             /DAppVersion=$v `
             installer\HomeAccounting.iss
 
+      - name: Zip installer for Telegram / email
+        shell: pwsh
+        run: |
+          $v = "${{ steps.ver.outputs.VERSION }}"
+          Compress-Archive `
+            -Path "installer-out\HomeAccounting_Setup_$v.exe" `
+            -DestinationPath "installer-out\HomeAccounting_Setup_$v.zip"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -58,13 +66,19 @@ jobs:
           body: |
             ## Домашний бюджет ${{ github.ref_name }}
 
+            ### Требования
+            - Windows 10 / 11 (x64)
+            - [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) — если не установлен, установщик подскажет
+
             ### Установка
             1. Скачайте `HomeAccounting_Setup_${{ steps.ver.outputs.VERSION }}.exe`
             2. Запустите от имени администратора
-            3. Следуйте инструкциям установщика
+            3. При запросе брандмауэра — нажмите **«Разрешить доступ»**
 
             ### Что нового
             _Заполните описание изменений вручную или добавьте CHANGELOG.md_
-          files: installer-out/HomeAccounting_Setup_${{ steps.ver.outputs.VERSION }}.exe
+          files: |
+            installer-out/HomeAccounting_Setup_${{ steps.ver.outputs.VERSION }}.exe
+            installer-out/HomeAccounting_Setup_${{ steps.ver.outputs.VERSION }}.zip
           draft: false
           prerelease: false
