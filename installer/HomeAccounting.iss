@@ -4,7 +4,7 @@
 #define AppExeName "HomeAccounting.exe"
 ; Версия берётся из build-системы через /DAppVersion=x.y.z
 #ifndef AppVersion
-  #define AppVersion "4.2.2"
+  #define AppVersion "4.2.3"
 #endif
 
 [Setup]
@@ -38,6 +38,7 @@ Name: "desktopicon"; Description: "Создать значок на рабоче
 
 [Files]
 Source: "..\publish\HomeAccounting_v{#AppVersion}.exe"; DestDir: "{app}"; DestName: "{#AppExeName}"; Flags: ignoreversion
+Source: "..\publish\e_sqlite3.dll";                     DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#AppName}";           Filename: "{app}\{#AppExeName}"
@@ -61,8 +62,10 @@ var
   KeyPath: String;
   Names:   TArrayOfString;
   I:       Integer;
+  FindRec: TFindRec;
 begin
   Result  := False;
+  // Реестр (Inno Setup 32-bit автоматически читает WOW6432Node)
   KeyPath := 'SOFTWARE\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.WindowsDesktop.App';
   if RegGetValueNames(HKLM, KeyPath, Names) then
     for I := 0 to GetArrayLength(Names) - 1 do
@@ -71,6 +74,12 @@ begin
         Result := True;
         Exit;
       end;
+  // Запасная проверка по файловой системе
+  if FindFirst(ExpandConstant('{commonpf64}\dotnet\shared\Microsoft.WindowsDesktop.App\8.*'), FindRec) then
+  begin
+    Result := True;
+    FindClose(FindRec);
+  end;
 end;
 
 // Вызывается перед установкой — скачивает и ставит .NET 8 автоматически
