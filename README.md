@@ -13,10 +13,11 @@
 
 ## Установка
 
-1. Перейдите в [Releases](https://github.com/andrey1b/HomeAccounting/releases/latest)
-2. Скачайте `HomeAccounting_Setup_x.y.z.exe`
-3. Запустите от имени **администратора**
-4. При запросе брандмауэра — нажмите **«Разрешить доступ»**
+**[⬇ Скачать последнюю версию](https://github.com/andrey1b/HomeAccounting/releases/latest)**
+
+1. Нажмите ссылку выше и скачайте `HomeAccounting_Setup_x.y.z.exe`
+2. Запустите от имени **администратора**
+3. При запросе брандмауэра — нажмите **«Разрешить доступ»**
 
 ## Приём чеков с телефона
 
