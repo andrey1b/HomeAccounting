@@ -6,7 +6,12 @@ namespace HomeAccounting.Database;
 public static class Db
 {
     public static string DbPath { get; } =
-        Path.Combine(AppContext.BaseDirectory, "homeaccounting.db");
+        Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "HomeAccounting", "homeaccounting.db");
+
+    private static void EnsureDataDir() =>
+        Directory.CreateDirectory(Path.GetDirectoryName(DbPath)!);
 
     public static SqliteConnection Open()
     {
@@ -18,6 +23,7 @@ public static class Db
 
     public static void Init()
     {
+        EnsureDataDir();
         using var conn = Open();
         conn.Execute(@"
             CREATE TABLE IF NOT EXISTS accounts (

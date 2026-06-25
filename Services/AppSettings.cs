@@ -15,7 +15,9 @@ public class AppSettings
     public bool   WindowMaximized  { get; set; } = false;
 
     private static string FilePath =>
-        System.IO.Path.Combine(AppContext.BaseDirectory, "ha_settings.json");
+        System.IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "HomeAccounting", "ha_settings.json");
 
     public static AppSettings Load()
     {
