@@ -73,6 +73,8 @@ begin
 end;
 
 function InitializeSetup(): Boolean;
+var
+  ErrCode: Integer;
 begin
   Result := True;
   if not IsDotNet8Installed() then
@@ -83,7 +85,7 @@ begin
       'Нажмите OK, чтобы открыть страницу загрузки Microsoft,' + #13#10 +
       'скачайте и установите runtime, затем запустите этот установщик снова.',
       mbInformation, MB_OKCANCEL) = IDOK then
-      ShellExec('open', '{#DotNetUrl}', '', '', SW_SHOW, ewNoWait, Result);
+      ShellExec('open', '{#DotNetUrl}', '', '', SW_SHOW, ewNoWait, ErrCode);
     Result := False;
   end;
 end;
