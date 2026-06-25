@@ -217,9 +217,12 @@ public partial class MainWindow : Window
         MiCatsExp.Header = AppLoc.T("menu_cats_exp");
         MiCatsInc.Header = AppLoc.T("menu_cats_inc");
         MiReports.Header  = AppLoc.T("menu_reports");
-        MiMaint.Header    = AppLoc.T("menu_maint");
-        MiClearDb.Header  = AppLoc.T("mi_clear_db");
-        MiVacuumDb.Header = AppLoc.T("mi_vacuum_db");
+        MiMaint.Header        = AppLoc.T("menu_maint");
+        MiOpenFolder.Header   = AppLoc.T("mi_open_folder");
+        MiOpenSite.Header     = AppLoc.T("mi_open_site");
+        MiCheckUpdate.Header  = AppLoc.T("mi_check_update");
+        MiClearDb.Header      = AppLoc.T("mi_clear_db");
+        MiVacuumDb.Header     = AppLoc.T("mi_vacuum_db");
         MiLang.Header    = AppLoc.T("menu_lang");
         MiLangRu.Header  = AppLoc.T("lang_ru");
         MiLangEn.Header  = AppLoc.T("lang_en");
@@ -1121,6 +1124,27 @@ public partial class MainWindow : Window
 
     private void MenuReports_Click(object sender, RoutedEventArgs e) =>
         new ReportsWindow { Owner = this }.ShowDialog();
+
+    private void MiOpenFolder_Click(object sender, RoutedEventArgs e) =>
+        System.Diagnostics.Process.Start("explorer.exe", AppContext.BaseDirectory);
+
+    private void MiOpenSite_Click(object sender, RoutedEventArgs e) =>
+        Services.UpdateChecker.OpenReleasesPage();
+
+    private void MiCheckUpdate_Click(object sender, RoutedEventArgs e)
+    {
+        MiCheckUpdate.IsEnabled = false;
+        Services.UpdateChecker.CheckAsync(tag =>
+            Dispatcher.Invoke(() =>
+            {
+                MiCheckUpdate.IsEnabled = true;
+                if (tag != null)
+                    ShowUpdateBanner(tag);
+                else
+                    MessageBox.Show(AppLoc.T("msg_no_updates"), "HomeAccounting",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+            }));
+    }
 
     private void MiClearDb_Click(object sender, RoutedEventArgs e)
     {

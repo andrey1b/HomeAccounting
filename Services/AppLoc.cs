@@ -50,9 +50,12 @@ public static class AppLoc
         ["menu_cats_exp"] = ["Категорії витрат", "Категории расходов", "Expense categories"],
         ["menu_cats_inc"] = ["Категорії доходів","Категории доходов",  "Income categories"],
         ["menu_reports"]  = ["Звіти",            "Отчёты",             "Reports"],
-        ["menu_maint"]    = ["Обслуговування",  "Обслуживание",       "Maintenance"],
-        ["mi_clear_db"]   = ["Очистити БД…",    "Очистить БД…",       "Clear DB…"],
-        ["mi_vacuum_db"]  = ["Стиснути БД",     "Сжать БД",           "Compact DB"],
+        ["menu_maint"]       = ["Обслуговування",        "Обслуживание",              "Maintenance"],
+        ["mi_open_folder"]   = ["Відкрити папку програми", "Открыть папку с программой","Open program folder"],
+        ["mi_open_site"]     = ["Перейти на сайт програми","Перейти на сайт программы", "Go to program website"],
+        ["mi_check_update"]  = ["Перевірити оновлення",    "Проверить обновления",       "Check for updates"],
+        ["mi_clear_db"]      = ["Очистити БД…",             "Очистить БД…",               "Clear DB…"],
+        ["mi_vacuum_db"]     = ["Стиснути БД",              "Сжать БД",                   "Compact DB"],
 
         // Buttons
         ["btn_add"]      = ["Додати",    "Добавить", "Add"],
@@ -198,6 +201,7 @@ public static class AppLoc
 
         // Receipt import
         ["msg_receipt_imported"] = ["Імпортовано {count} позицій з чека.", "Импортировано {count} позиций из чека.", "Imported {count} items from receipt."],
+        ["msg_no_updates"]       = ["Програма актуальна. Оновлень немає.", "Программа актуальна. Обновлений нет.", "Program is up to date."],
         ["msg_receipt_error"]    = ["Помилка читання чека.",               "Ошибка чтения чека.",                   "Error reading receipt."],
         ["msg_receipt_no_items"] = ["У чеку не знайдено товарів.",         "В чеке не найдено товаров.",            "No items found in receipt."],
         ["status_watching"]      = ["Слідкую за чеками",                   "Слежу за чеками",                       "Watching receipts"],

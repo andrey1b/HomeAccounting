@@ -46,8 +46,13 @@
             </MenuItem>
             <MenuItem x:Name="MiReports" Click="MenuReports_Click"/>
             <MenuItem x:Name="MiMaint">
-                <MenuItem x:Name="MiClearDb"  Click="MiClearDb_Click"/>
-                <MenuItem x:Name="MiVacuumDb" Click="MiVacuumDb_Click"/>
+                <MenuItem x:Name="MiOpenFolder"   Click="MiOpenFolder_Click"/>
+                <MenuItem x:Name="MiOpenSite"     Click="MiOpenSite_Click"/>
+                <Separator/>
+                <MenuItem x:Name="MiCheckUpdate"  Click="MiCheckUpdate_Click"/>
+                <Separator/>
+                <MenuItem x:Name="MiClearDb"      Click="MiClearDb_Click"/>
+                <MenuItem x:Name="MiVacuumDb"     Click="MiVacuumDb_Click"/>
             </MenuItem>
             <MenuItem x:Name="MiLang">
                 <MenuItem x:Name="MiLangRu" Tag="ru" IsCheckable="True" IsChecked="True" Click="MiLang_Click"/>

@@ -49,7 +49,7 @@ public partial class App : Application
         Services.UpdateChecker.CheckAsync(tag =>
             Dispatcher.Invoke(() =>
             {
-                if (MainWindow is MainWindow mw)
+                if (tag != null && MainWindow is MainWindow mw)
                     mw.ShowUpdateBanner(tag);
             }));
     }
