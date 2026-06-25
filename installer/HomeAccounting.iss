@@ -4,7 +4,7 @@
 #define AppExeName "HomeAccounting.exe"
 ; Версия берётся из build-системы через /DAppVersion=x.y.z
 #ifndef AppVersion
-  #define AppVersion "4.2.4"
+  #define AppVersion "4.2.5"
 #endif
 
 [Setup]
@@ -23,6 +23,7 @@ Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
 PrivilegesRequired=admin
+SetupIconFile=..\Resources\app.ico
 UninstallDisplayIcon={app}\{#AppExeName}
 ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0.17763
