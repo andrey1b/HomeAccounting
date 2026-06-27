@@ -34,13 +34,13 @@ public static class ReportService
             FROM expenses e
             LEFT JOIN categories    c ON c.id = e.category_id
             LEFT JOIN subcategories s ON s.id = e.subcategory_id
-            WHERE e.date >= @df AND e.date <= @dt
+            WHERE e.user_id = @uid AND e.date >= @df AND e.date <= @dt
               AND (@aid IS NULL OR e.account_id    = @aid)
               AND (@cid IS NULL OR e.category_id   = @cid)
               AND (@sid IS NULL OR e.subcategory_id = @sid)
             GROUP BY e.category_id, e.subcategory_id
             ORDER BY c.name, s.name",
-            new { df=from.ToString("yyyy-MM-dd"), dt=to.ToString("yyyy-MM-dd"),
+            new { uid=Session.UserId, df=from.ToString("yyyy-MM-dd"), dt=to.ToString("yyyy-MM-dd"),
                   aid=accountId, cid=categoryId, sid=subcategoryId }
         ).ToList();
     }
@@ -58,13 +58,13 @@ public static class ReportService
             FROM incomes i
             LEFT JOIN categories    c ON c.id = i.category_id
             LEFT JOIN subcategories s ON s.id = i.subcategory_id
-            WHERE i.date >= @df AND i.date <= @dt
+            WHERE i.user_id = @uid AND i.date >= @df AND i.date <= @dt
               AND (@aid IS NULL OR i.account_id    = @aid)
               AND (@cid IS NULL OR i.category_id   = @cid)
               AND (@sid IS NULL OR i.subcategory_id = @sid)
             GROUP BY i.category_id, i.subcategory_id
             ORDER BY c.name, s.name",
-            new { df=from.ToString("yyyy-MM-dd"), dt=to.ToString("yyyy-MM-dd"),
+            new { uid=Session.UserId, df=from.ToString("yyyy-MM-dd"), dt=to.ToString("yyyy-MM-dd"),
                   aid=accountId, cid=categoryId, sid=subcategoryId }
         ).ToList();
     }
@@ -83,11 +83,11 @@ public static class ReportService
                    SUM(e.amount*(1-e.discount/100)) AS Total,
                    COUNT(*) AS Count
             FROM expenses e
-            WHERE e.date >= @df AND e.date <= @dt
+            WHERE e.user_id = @uid AND e.date >= @df AND e.date <= @dt
               AND (@aid IS NULL OR e.account_id = @aid)
             GROUP BY {groupExpr}
             ORDER BY Period DESC",
-            new { df=from.ToString("yyyy-MM-dd"), dt=to.ToString("yyyy-MM-dd"), aid=accountId }
+            new { uid=Session.UserId, df=from.ToString("yyyy-MM-dd"), dt=to.ToString("yyyy-MM-dd"), aid=accountId }
         ).ToList();
     }
 
@@ -104,11 +104,11 @@ public static class ReportService
                    SUM(i.amount) AS Total,
                    COUNT(*) AS Count
             FROM incomes i
-            WHERE i.date >= @df AND i.date <= @dt
+            WHERE i.user_id = @uid AND i.date >= @df AND i.date <= @dt
               AND (@aid IS NULL OR i.account_id = @aid)
             GROUP BY {groupExpr}
             ORDER BY Period DESC",
-            new { df=from.ToString("yyyy-MM-dd"), dt=to.ToString("yyyy-MM-dd"), aid=accountId }
+            new { uid=Session.UserId, df=from.ToString("yyyy-MM-dd"), dt=to.ToString("yyyy-MM-dd"), aid=accountId }
         ).ToList();
     }
 }

@@ -1,0 +1,18 @@
+<Window x:Class="HomeAccounting.Views.CurrencyDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="320" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <StackPanel Margin="16">
+        <TextBlock x:Name="TbLblCode" FontWeight="Bold" Margin="0,0,0,4"/>
+        <TextBox x:Name="TbCode" Margin="0,0,0,12" Padding="6,4"/>
+        <TextBlock x:Name="TbLblName" FontWeight="Bold" Margin="0,0,0,4"/>
+        <TextBox x:Name="TbName" Margin="0,0,0,12" Padding="6,4"/>
+        <TextBlock x:Name="TbLblSymbol" FontWeight="Bold" Margin="0,0,0,4"/>
+        <TextBox x:Name="TbSymbol" Margin="0,0,0,12" Padding="6,4"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+            <Button x:Name="BtnOk" Width="100" Height="30" Margin="0,0,16,0" IsDefault="True" Click="BtnOk_Click"/>
+            <Button x:Name="BtnCancel" Width="100" Height="30" IsCancel="True"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

@@ -43,6 +43,13 @@
             <MenuItem x:Name="MiRefs">
                 <MenuItem x:Name="MiCatsExp" Click="MenuCatsExpense_Click"/>
                 <MenuItem x:Name="MiCatsInc" Click="MenuCatsIncome_Click"/>
+                <Separator/>
+                <MenuItem x:Name="MiCurrencies" Click="MiCurrencies_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="MiAccounting">
+                <MenuItem x:Name="MiBudgets"  Click="MiBudgets_Click"/>
+                <MenuItem x:Name="MiDebts"    Click="MiDebts_Click"/>
+                <MenuItem x:Name="MiDeposits" Click="MiDeposits_Click"/>
             </MenuItem>
             <MenuItem x:Name="MiReports" Click="MenuReports_Click"/>
             <MenuItem x:Name="MiMaint">
@@ -57,6 +64,10 @@
             <MenuItem x:Name="MiLang">
                 <MenuItem x:Name="MiLangRu" Tag="ru" IsCheckable="True" IsChecked="True" Click="MiLang_Click"/>
                 <MenuItem x:Name="MiLangEn" Tag="en" IsCheckable="True" Click="MiLang_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="MiUser">
+                <MenuItem x:Name="MiSwitchUser"  Click="MiSwitchUser_Click"/>
+                <MenuItem x:Name="MiManageUsers" Click="MiManageUsers_Click"/>
             </MenuItem>
         </Menu>
 

@@ -114,17 +114,18 @@ public static class XlsxService
                 if (string.IsNullOrWhiteSpace(name)) { skipped++; continue; }
 
                 bool exists = conn.ExecuteScalar<int>(
-                    "SELECT COUNT(*) FROM accounts WHERE LOWER(name)=LOWER(@n)", new { n = name }) > 0;
+                    "SELECT COUNT(*) FROM accounts WHERE user_id=@uid AND LOWER(name)=LOWER(@n)",
+                    new { uid = Session.UserId, n = name }) > 0;
                 if (exists) { skipped++; continue; }
 
                 double initBal = 0;
                 if (cInit >= 0) TryParseAmount(Cell(row, cInit), out initBal);
                 var note = cNote >= 0 ? Cell(row, cNote) : "";
                 int nextSort = conn.ExecuteScalar<int>(
-                    "SELECT COALESCE(MAX(sort_order),0)+1 FROM accounts");
+                    "SELECT COALESCE(MAX(sort_order),0)+1 FROM accounts WHERE user_id=@uid", new { uid = Session.UserId });
                 conn.Execute(
-                    "INSERT INTO accounts(name,sort_order,initial_balance,note) VALUES(@n,@s,@b,@nt)",
-                    new { n = name, s = nextSort, b = initBal, nt = note });
+                    "INSERT INTO accounts(user_id,name,sort_order,initial_balance,note) VALUES(@uid,@n,@s,@b,@nt)",
+                    new { uid = Session.UserId, n = name, s = nextSort, b = initBal, nt = note });
                 imported++;
             }
         }
@@ -336,45 +337,48 @@ public static class XlsxService
     {
         using var conn = Db.Open();
         var id = conn.ExecuteScalar<int?>(
-            "SELECT id FROM accounts WHERE LOWER(name)=LOWER(@n) LIMIT 1", new { n = name });
+            "SELECT id FROM accounts WHERE user_id=@uid AND LOWER(name)=LOWER(@n) LIMIT 1",
+            new { uid = Session.UserId, n = name });
         if (id.HasValue) return id.Value;
         return conn.ExecuteScalar<int>(
-            "INSERT INTO accounts(name,sort_order,note,initial_balance,is_hidden,currency,icon) VALUES(@n,0,'',0,0,'₴','💰'); SELECT last_insert_rowid();",
-            new { n = name });
+            "INSERT INTO accounts(user_id,name,sort_order,note,initial_balance,is_hidden,currency,icon) VALUES(@uid,@n,0,'',0,0,'₴','💰'); SELECT last_insert_rowid();",
+            new { uid = Session.UserId, n = name });
     }
 
     private static int GetOrCreateCategory(string name, string type)
     {
         using var conn = Db.Open();
         var id = conn.ExecuteScalar<int?>(
-            "SELECT id FROM categories WHERE LOWER(name)=LOWER(@n) AND type=@t LIMIT 1", new { n = name, t = type });
+            "SELECT id FROM categories WHERE user_id=@uid AND LOWER(name)=LOWER(@n) AND type=@t LIMIT 1",
+            new { uid = Session.UserId, n = name, t = type });
         if (id.HasValue) return id.Value;
         return conn.ExecuteScalar<int>(
-            "INSERT INTO categories(name,type) VALUES(@n,@t); SELECT last_insert_rowid();",
-            new { n = name, t = type });
+            "INSERT INTO categories(user_id,name,type) VALUES(@uid,@n,@t); SELECT last_insert_rowid();",
+            new { uid = Session.UserId, n = name, t = type });
     }
 
     private static int GetOrCreateSubcategory(string name, int categoryId)
     {
         using var conn = Db.Open();
         var id = conn.ExecuteScalar<int?>(
-            "SELECT id FROM subcategories WHERE LOWER(name)=LOWER(@n) AND category_id=@c LIMIT 1",
-            new { n = name, c = categoryId });
+            "SELECT id FROM subcategories WHERE user_id=@uid AND LOWER(name)=LOWER(@n) AND category_id=@c LIMIT 1",
+            new { uid = Session.UserId, n = name, c = categoryId });
         if (id.HasValue) return id.Value;
         return conn.ExecuteScalar<int>(
-            "INSERT INTO subcategories(category_id,name) VALUES(@c,@n); SELECT last_insert_rowid();",
-            new { n = name, c = categoryId });
+            "INSERT INTO subcategories(user_id,category_id,name) VALUES(@uid,@c,@n); SELECT last_insert_rowid();",
+            new { uid = Session.UserId, n = name, c = categoryId });
     }
 
     private static int GetOrCreateUnit(string name)
     {
         using var conn = Db.Open();
         var id = conn.ExecuteScalar<int?>(
-            "SELECT id FROM units WHERE LOWER(name)=LOWER(@n) LIMIT 1", new { n = name });
+            "SELECT id FROM units WHERE user_id=@uid AND LOWER(name)=LOWER(@n) LIMIT 1",
+            new { uid = Session.UserId, n = name });
         if (id.HasValue) return id.Value;
         return conn.ExecuteScalar<int>(
-            "INSERT INTO units(name) VALUES(@n); SELECT last_insert_rowid();",
-            new { n = name });
+            "INSERT INTO units(user_id,name) VALUES(@uid,@n); SELECT last_insert_rowid();",
+            new { uid = Session.UserId, n = name });
     }
 
     // ── Import Preview: Parse ─────────────────────────────────────────────────
@@ -600,19 +604,21 @@ public static class XlsxService
             {
                 if (string.IsNullOrWhiteSpace(row.Name)) { skip++; continue; }
                 bool exists = conn.ExecuteScalar<int>(
-                    "SELECT COUNT(*) FROM accounts WHERE LOWER(name)=LOWER(@n)", new { n = row.Name }) > 0;
+                    "SELECT COUNT(*) FROM accounts WHERE user_id=@uid AND LOWER(name)=LOWER(@n)",
+                    new { uid = Session.UserId, n = row.Name }) > 0;
                 if (exists)
                 {
                     conn.Execute(
-                        "UPDATE accounts SET initial_balance=@b, note=@nt WHERE LOWER(name)=LOWER(@n)",
-                        new { n = row.Name, b = row.InitBalance, nt = row.Note });
+                        "UPDATE accounts SET initial_balance=@b, note=@nt WHERE user_id=@uid AND LOWER(name)=LOWER(@n)",
+                        new { uid = Session.UserId, n = row.Name, b = row.InitBalance, nt = row.Note });
                 }
                 else
                 {
-                    int sortOrder = conn.ExecuteScalar<int>("SELECT COALESCE(MAX(sort_order),0)+1 FROM accounts");
+                    int sortOrder = conn.ExecuteScalar<int>(
+                        "SELECT COALESCE(MAX(sort_order),0)+1 FROM accounts WHERE user_id=@uid", new { uid = Session.UserId });
                     conn.Execute(
-                        "INSERT INTO accounts(name,sort_order,initial_balance,note,currency,icon) VALUES(@n,@s,@b,@nt,'₴','💰')",
-                        new { n = row.Name, s = sortOrder, b = row.InitBalance, nt = row.Note });
+                        "INSERT INTO accounts(user_id,name,sort_order,initial_balance,note,currency,icon) VALUES(@uid,@n,@s,@b,@nt,'₴','💰')",
+                        new { uid = Session.UserId, n = row.Name, s = sortOrder, b = row.InitBalance, nt = row.Note });
                 }
                 imp++;
             }

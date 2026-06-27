@@ -13,6 +13,8 @@ obj/
 
 # Публикация и дистрибутивы (собираются CI/CD)
 publish/
+publish-fd/
+installer-out/
 Distributions/
 
 # База данных пользователя — НИКОГДА в репозиторий

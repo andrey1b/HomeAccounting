@@ -8,56 +8,62 @@ public static class CategoryService
     {
         using var conn = Db.Open();
         return conn.Query<Category>(
-            "SELECT id, name, type FROM categories WHERE type=@t ORDER BY name", new { t = type }).ToList();
+            "SELECT id, name, type FROM categories WHERE user_id=@uid AND type=@t ORDER BY name",
+            new { uid = Session.UserId, t = type }).ToList();
     }
 
     public static List<Subcategory> GetSubcategories(int categoryId)
     {
         using var conn = Db.Open();
         return conn.Query<Subcategory>(
-            "SELECT id, category_id, name FROM subcategories WHERE category_id=@cid ORDER BY name",
-            new { cid = categoryId }).ToList();
+            "SELECT id, category_id, name FROM subcategories WHERE user_id=@uid AND category_id=@cid ORDER BY name",
+            new { uid = Session.UserId, cid = categoryId }).ToList();
     }
 
     public static int AddCategory(string name, string type)
     {
         using var conn = Db.Open();
         return conn.ExecuteScalar<int>(
-            "INSERT INTO categories(name,type) VALUES(@n,@t); SELECT last_insert_rowid();",
-            new { n = name, t = type });
+            "INSERT INTO categories(user_id,name,type) VALUES(@uid,@n,@t); SELECT last_insert_rowid();",
+            new { uid = Session.UserId, n = name, t = type });
     }
 
     public static void UpdateCategory(int id, string name) =>
-        Db.Open().Execute("UPDATE categories SET name=@n WHERE id=@id", new { n = name, id });
+        Db.Open().Execute("UPDATE categories SET name=@n WHERE id=@id AND user_id=@uid",
+            new { n = name, id, uid = Session.UserId });
 
     public static void DeleteCategory(int id) =>
-        Db.Open().Execute("DELETE FROM categories WHERE id=@id", new { id });
+        Db.Open().Execute("DELETE FROM categories WHERE id=@id AND user_id=@uid",
+            new { id, uid = Session.UserId });
 
     public static int AddSubcategory(int categoryId, string name)
     {
         using var conn = Db.Open();
         return conn.ExecuteScalar<int>(
-            "INSERT INTO subcategories(category_id,name) VALUES(@cid,@n); SELECT last_insert_rowid();",
-            new { cid = categoryId, n = name });
+            "INSERT INTO subcategories(user_id,category_id,name) VALUES(@uid,@cid,@n); SELECT last_insert_rowid();",
+            new { uid = Session.UserId, cid = categoryId, n = name });
     }
 
     public static void UpdateSubcategory(int id, string name) =>
-        Db.Open().Execute("UPDATE subcategories SET name=@n WHERE id=@id", new { n = name, id });
+        Db.Open().Execute("UPDATE subcategories SET name=@n WHERE id=@id AND user_id=@uid",
+            new { n = name, id, uid = Session.UserId });
 
     public static void DeleteSubcategory(int id) =>
-        Db.Open().Execute("DELETE FROM subcategories WHERE id=@id", new { id });
+        Db.Open().Execute("DELETE FROM subcategories WHERE id=@id AND user_id=@uid",
+            new { id, uid = Session.UserId });
 
     public static List<Unit> GetUnits()
     {
         using var conn = Db.Open();
-        return conn.Query<Unit>("SELECT id, name FROM units ORDER BY name").ToList();
+        return conn.Query<Unit>("SELECT id, name FROM units WHERE user_id=@uid ORDER BY name",
+            new { uid = Session.UserId }).ToList();
     }
 
     public static int AddUnit(string name)
     {
         using var conn = Db.Open();
         return conn.ExecuteScalar<int>(
-            "INSERT OR IGNORE INTO units(name) VALUES(@n); SELECT id FROM units WHERE name=@n;",
-            new { n = name });
+            "INSERT OR IGNORE INTO units(user_id,name) VALUES(@uid,@n); SELECT id FROM units WHERE user_id=@uid AND name=@n;",
+            new { uid = Session.UserId, n = name });
     }
 }

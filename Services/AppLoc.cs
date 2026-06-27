@@ -220,6 +220,89 @@ public static class AppLoc
         ["msg_select_row"]            = ["Оберіть рядок у списку.",                          "Выберите строку в списке.",                    "Select a row in the list."],
         ["msg_confirm_del_cat"]       = ["Видалити категорію «{name}» та всі підкатегорії?", "Удалить категорию «{name}» и все подкатегории?","Delete category «{name}» and all subcategories?"],
         ["msg_confirm_del_subcat"]    = ["Видалити підкатегорію «{name}»?",                  "Удалить подкатегорию «{name}»?",               "Delete subcategory «{name}»?"],
+
+        // ── v4.2.7: общее ───────────────────────────────────────────────────
+        ["btn_ok"]        = ["OK", "OK", "OK"],
+        ["col_currency"]  = ["Валюта", "Валюта", "Currency"],
+
+        // Вход / пользователи
+        ["login_title"]    = ["Вхід",                       "Вход",                          "Sign in"],
+        ["login_header"]   = ["Домашній бюджет",            "Домашний бюджет",               "Home Budget"],
+        ["login_user"]     = ["Користувач:",                "Пользователь:",                 "User:"],
+        ["login_password"] = ["Пароль:",                    "Пароль:",                       "Password:"],
+        ["login_enter"]    = ["Увійти",                     "Войти",                         "Sign in"],
+        ["login_exit"]     = ["Вихід",                      "Выход",                         "Exit"],
+        ["login_wrong"]    = ["Невірний пароль.",           "Неверный пароль.",              "Wrong password."],
+        ["menu_user"]      = ["Користувач",                 "Пользователь",                  "User"],
+        ["user_switch"]    = ["Змінити користувача…",       "Сменить пользователя…",         "Switch user…"],
+        ["user_manage"]    = ["Керування користувачами…",   "Управление пользователями…",    "Manage users…"],
+        ["user_current"]   = ["Користувач: {name}",         "Пользователь: {name}",          "User: {name}"],
+        ["users_title"]    = ["Користувачі",                "Пользователи",                  "Users"],
+        ["user_name"]      = ["Ім'я",                       "Имя",                           "Name"],
+        ["user_haspass"]   = ["Пароль",                     "Пароль",                        "Password"],
+        ["user_default"]   = ["За замовч.",                 "По умолч.",                     "Default"],
+        ["user_set_pass"]  = ["Змінити пароль…",            "Изменить пароль…",              "Change password…"],
+        ["user_set_default"]=["Зробити основним",           "Сделать основным",              "Make default"],
+        ["user_new_pass"]  = ["Новий пароль (пусто = без пароля):", "Новый пароль (пусто = без пароля):", "New password (empty = none):"],
+
+        // Меню «Облік» и новые справочники
+        ["menu_accounting"]= ["Облік",                      "Учёт",                          "Accounting"],
+        ["menu_budgets"]   = ["Бюджети…",                   "Бюджеты…",                      "Budgets…"],
+        ["menu_debts"]     = ["Борги…",                     "Долги…",                        "Debts…"],
+        ["menu_deposits"]  = ["Вклади…",                    "Вклады…",                       "Deposits…"],
+        ["menu_currencies"]= ["Валюти та курси…",           "Валюты и курсы…",               "Currencies & rates…"],
+
+        // Валюты / курсы
+        ["currencies_title"]= ["Валюти та курси",           "Валюты и курсы",                "Currencies & rates"],
+        ["tab_currencies"] = ["Валюти",                     "Валюты",                        "Currencies"],
+        ["tab_rates"]      = ["Курси",                      "Курсы",                         "Rates"],
+        ["cur_code"]       = ["Код",                        "Код",                           "Code"],
+        ["cur_name"]       = ["Назва",                      "Название",                      "Name"],
+        ["cur_symbol"]     = ["Символ",                     "Символ",                        "Symbol"],
+        ["cur_default"]    = ["Основна",                    "Основная",                      "Default"],
+        ["cur_make_default"]=["Зробити основною",           "Сделать основной",              "Make default"],
+        ["rate_date"]      = ["Дата",                       "Дата",                          "Date"],
+        ["rate_value"]     = ["Курс",                       "Курс",                          "Rate"],
+        ["dlg_currency_title"]=["Валюта",                   "Валюта",                        "Currency"],
+        ["dlg_rate_title"] = ["Курс валюти",                "Курс валюты",                   "Currency rate"],
+
+        // Долги
+        ["debts_title"]    = ["Борги",                      "Долги",                         "Debts"],
+        ["debt_show"]      = ["Показати:",                  "Показать:",                     "Show:"],
+        ["debt_all"]       = ["Всі",                        "Все",                           "All"],
+        ["debt_debtor"]    = ["Мені винні",                 "Мне должны",                    "Owed to me"],
+        ["debt_creditor"]  = ["Я винен",                    "Я должен",                      "I owe"],
+        ["debt_kind"]      = ["Тип боргу:",                 "Тип долга:",                    "Debt type:"],
+        ["debt_party"]     = ["Контрагент",                 "Контрагент",                    "Counterparty"],
+        ["debt_percent"]   = ["Відсоток %:",               "Процент %:",                    "Percent %:"],
+        ["debt_amount"]    = ["Сума",                       "Сумма",                         "Amount"],
+        ["debt_back"]      = ["Повернуто",                  "Возвращено",                    "Returned"],
+        ["debt_remaining"] = ["Залишок",                    "Остаток",                       "Remaining"],
+        ["debt_status"]    = ["Статус",                     "Статус",                        "Status"],
+        ["debt_closed"]    = ["Погашено",                   "Погашен",                       "Closed"],
+        ["debt_date_close"]= ["Дата погашення:",           "Дата погашения:",               "Close date:"],
+        ["debt_party_required"]=["Вкажіть контрагента.",   "Укажите контрагента.",          "Enter counterparty."],
+        ["debt_total"]     = ["Мені винні: {owed}  •  Я винен: {iowe}", "Мне должны: {owed}  •  Я должен: {iowe}", "Owed to me: {owed}  •  I owe: {iowe}"],
+
+        // Бюджеты
+        ["budgets_title"]  = ["Бюджети",                    "Бюджеты",                       "Budgets"],
+        ["lbl_year"]       = ["Рік:",                       "Год:",                          "Year:"],
+        ["lbl_month"]      = ["Місяць:",                    "Месяц:",                        "Month:"],
+        ["lbl_type"]       = ["Тип:",                       "Тип:",                          "Type:"],
+        ["budget_plan"]    = ["План",                       "План",                          "Plan"],
+        ["budget_fact"]    = ["Факт",                       "Факт",                          "Fact"],
+        ["budget_diff"]    = ["Залишок",                    "Остаток",                       "Left"],
+        ["budget_total"]   = ["План: {plan}  •  Факт: {fact}", "План: {plan}  •  Факт: {fact}", "Plan: {plan}  •  Fact: {fact}"],
+        ["dlg_budget_title"]=["Бюджет",                     "Бюджет",                        "Budget"],
+
+        // Вклады
+        ["deposits_title"] = ["Вклади",                     "Вклады",                        "Deposits"],
+        ["dep_name"]       = ["Назва",                      "Название",                      "Name"],
+        ["dep_amount"]     = ["Сума",                       "Сумма",                         "Amount"],
+        ["dep_rate"]       = ["Ставка %",                   "Ставка %",                      "Rate %"],
+        ["dep_open"]       = ["Відкрито",                   "Открыт",                        "Opened"],
+        ["dep_close"]      = ["Закрито",                    "Закрыт",                        "Closed"],
+        ["dlg_deposit_title"]=["Вклад",                     "Вклад",                         "Deposit"],
     };
 
     public static string T(string key)
@@ -230,6 +313,9 @@ public static class AppLoc
 
     public static string T(string key, string placeholder, string value) =>
         T(key).Replace("{" + placeholder + "}", value);
+
+    public static string T(string key, string p1, string v1, string p2, string v2) =>
+        T(key).Replace("{" + p1 + "}", v1).Replace("{" + p2 + "}", v2);
 
     public static void SetLang(string lang)
     {

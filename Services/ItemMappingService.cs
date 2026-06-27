@@ -20,8 +20,8 @@ public static class ItemMappingService
         if (string.IsNullOrWhiteSpace(name)) return null;
         using var conn = Db.Open();
         return conn.QueryFirstOrDefault<ItemMapping>(
-            "SELECT id, name_key AS NameKey, category_id AS CategoryId, subcategory_id AS SubcategoryId, unit_id AS UnitId FROM item_mappings WHERE name_key = @k",
-            new { k = Key(name) });
+            "SELECT id, name_key AS NameKey, category_id AS CategoryId, subcategory_id AS SubcategoryId, unit_id AS UnitId FROM item_mappings WHERE user_id=@uid AND name_key = @k",
+            new { uid = Session.UserId, k = Key(name) });
     }
 
     public static ItemMapping? FindBarcode(string barcode) =>
@@ -38,7 +38,8 @@ public static class ItemMappingService
         using var conn = Db.Open();
         return conn.Query<ItemMapping>(
             "SELECT id, name_key AS NameKey, category_id AS CategoryId, " +
-            "subcategory_id AS SubcategoryId, unit_id AS UnitId FROM item_mappings"
+            "subcategory_id AS SubcategoryId, unit_id AS UnitId FROM item_mappings WHERE user_id=@uid",
+            new { uid = Session.UserId }
         ).ToList();
     }
 
@@ -47,12 +48,12 @@ public static class ItemMappingService
         if (string.IsNullOrWhiteSpace(name)) return;
         using var conn = Db.Open();
         conn.Execute(@"
-            INSERT INTO item_mappings(name_key, category_id, subcategory_id, unit_id)
-            VALUES(@k, @c, @s, @u)
-            ON CONFLICT(name_key) DO UPDATE SET
+            INSERT INTO item_mappings(user_id, name_key, category_id, subcategory_id, unit_id)
+            VALUES(@uid, @k, @c, @s, @u)
+            ON CONFLICT(user_id, name_key) DO UPDATE SET
                 category_id    = @c,
                 subcategory_id = @s,
                 unit_id        = @u",
-            new { k = Key(name), c = catId, s = subcatId, u = unitId });
+            new { uid = Session.UserId, k = Key(name), c = catId, s = subcatId, u = unitId });
     }
 }

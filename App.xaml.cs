@@ -12,18 +12,22 @@ public partial class App : Application
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
+        try {
+
+        // Инициализация БД и настроек до входа (нужна таблица users)
+        Db.Init();
+        var settings = AppSettings.Load();
+        AppLoc.SetLang(settings.Lang);
+
+        // Экран входа с выбором пользователя и паролем
+        var login = new Views.LoginWindow();
+        if (login.ShowDialog() != true) { Shutdown(); return; }
+        Session.Set(login.SelectedUserId, login.SelectedUserName);
+
         var splash = new Views.SplashWindow();
         splash.Show();
         Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, () => { });
 
-        splash.SetStatus("Инициализация базы данных…");
-        Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, () => { });
-        Db.Init();
-
-        splash.SetStatus("Загрузка настроек…");
-        Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, () => { });
-        var settings = AppSettings.Load();
-        AppLoc.SetLang(settings.Lang);
         StartWatcher(settings.XmlWatchFolder);
 
         splash.SetStatus("Запуск HTTP-сервера (порт 8772)…");
@@ -52,6 +56,15 @@ public partial class App : Application
                 if (tag != null && MainWindow is MainWindow mw)
                     mw.ShowUpdateBanner(tag);
             }));
+
+        }
+        catch (Exception ex)
+        {
+            try { File.WriteAllText(Path.Combine(Path.GetTempPath(), "ha_crash.log"), ex.ToString()); } catch { }
+            MessageBox.Show(ex.ToString(), "HomeAccounting — ошибка запуска",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+            Shutdown();
+        }
     }
 
     protected override void OnExit(ExitEventArgs e)

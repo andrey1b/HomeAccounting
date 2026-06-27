@@ -29,27 +29,27 @@ public static class TransferService
             FROM transfers t
             LEFT JOIN accounts fa ON fa.id = t.from_account_id
             LEFT JOIN accounts ta ON ta.id = t.to_account_id
-            WHERE t.date >= @df AND t.date <= @dt
+            WHERE t.user_id = @uid AND t.date >= @df AND t.date <= @dt
             ORDER BY t.date DESC, t.id DESC",
-            new { df = from.ToString("yyyy-MM-dd"), dt = to.ToString("yyyy-MM-dd") }).ToList();
+            new { uid = Session.UserId, df = from.ToString("yyyy-MM-dd"), dt = to.ToString("yyyy-MM-dd") }).ToList();
     }
 
     public static Transfer? GetById(int id)
     {
         using var conn = Db.Open();
         return conn.QueryFirstOrDefault<Transfer>(
-            "SELECT id, date, from_account_id, to_account_id, amount, note FROM transfers WHERE id=@id",
-            new { id });
+            "SELECT id, date, from_account_id, to_account_id, amount, note FROM transfers WHERE id=@id AND user_id=@uid",
+            new { id, uid = Session.UserId });
     }
 
     public static int Add(Transfer t)
     {
         using var conn = Db.Open();
         return conn.ExecuteScalar<int>(@"
-            INSERT INTO transfers(date, from_account_id, to_account_id, amount, note)
-            VALUES(@d, @fa, @ta, @am, @n);
+            INSERT INTO transfers(user_id, date, from_account_id, to_account_id, amount, note)
+            VALUES(@uid, @d, @fa, @ta, @am, @n);
             SELECT last_insert_rowid();",
-            new { d = t.Date.ToString("yyyy-MM-dd"), fa = t.FromAccountId, ta = t.ToAccountId, am = t.Amount, n = t.Note });
+            new { uid = Session.UserId, d = t.Date.ToString("yyyy-MM-dd"), fa = t.FromAccountId, ta = t.ToAccountId, am = t.Amount, n = t.Note });
     }
 
     public static void Update(Transfer t)
@@ -57,13 +57,13 @@ public static class TransferService
         using var conn = Db.Open();
         conn.Execute(@"
             UPDATE transfers SET date=@d, from_account_id=@fa, to_account_id=@ta, amount=@am, note=@n
-            WHERE id=@id",
-            new { d = t.Date.ToString("yyyy-MM-dd"), fa = t.FromAccountId, ta = t.ToAccountId, am = t.Amount, n = t.Note, id = t.Id });
+            WHERE id=@id AND user_id=@uid",
+            new { d = t.Date.ToString("yyyy-MM-dd"), fa = t.FromAccountId, ta = t.ToAccountId, am = t.Amount, n = t.Note, id = t.Id, uid = Session.UserId });
     }
 
     public static void Delete(int id)
     {
         using var conn = Db.Open();
-        conn.Execute("DELETE FROM transfers WHERE id=@id", new { id });
+        conn.Execute("DELETE FROM transfers WHERE id=@id AND user_id=@uid", new { id, uid = Session.UserId });
     }
 }

@@ -26,12 +26,14 @@ public static class ExpenseService
     {
         using var conn = Db.Open();
         var sql = JoinSql + @"
-            WHERE e.date >= @df AND e.date <= @dt
+            WHERE e.user_id = @uid
+              AND e.date >= @df AND e.date <= @dt
               AND (@aid IS NULL OR e.account_id = @aid)
               AND (@cid IS NULL OR e.category_id = @cid)
               AND (@sid IS NULL OR e.subcategory_id = @sid)
             ORDER BY e.date DESC, e.id DESC";
         return conn.Query<ExpenseRow>(sql, new {
+            uid = Session.UserId,
             df = f.DateFrom.ToString("yyyy-MM-dd"),
             dt = f.DateTo.ToString("yyyy-MM-dd"),
             aid = f.AccountId, cid = f.CategoryId, sid = f.SubcategoryId
@@ -52,8 +54,9 @@ public static class ExpenseService
                 COALESCE(SUM(CASE WHEN date >= @ms THEN amount*(1-discount/100) ELSE 0 END), 0) AS Month,
                 COALESCE(SUM(amount*(1-discount/100)), 0) AS Total
             FROM expenses
-            WHERE (@aid IS NULL OR account_id = @aid)";
+            WHERE user_id = @uid AND (@aid IS NULL OR account_id = @aid)";
         return conn.QueryFirst<ExpenseSummary>(sql, new {
+            uid = Session.UserId,
             td = today.ToString("yyyy-MM-dd"),
             ws = weekStart.ToString("yyyy-MM-dd"),
             ms = monthStart.ToString("yyyy-MM-dd"),
@@ -65,18 +68,18 @@ public static class ExpenseService
     {
         using var conn = Db.Open();
         return conn.QueryFirstOrDefault<Expense>(
-            "SELECT id,date,account_id,category_id,subcategory_id,quantity,unit_id,amount,discount,note,receipt_item_name AS ReceiptItemName FROM expenses WHERE id=@id",
-            new { id });
+            "SELECT id,date,account_id,category_id,subcategory_id,quantity,unit_id,amount,discount,note,receipt_item_name AS ReceiptItemName FROM expenses WHERE id=@id AND user_id=@uid",
+            new { id, uid = Session.UserId });
     }
 
     public static int Add(Expense e)
     {
         using var conn = Db.Open();
         return conn.ExecuteScalar<int>(@"
-            INSERT INTO expenses(date,account_id,category_id,subcategory_id,quantity,unit_id,amount,discount,note,receipt_item_name)
-            VALUES(@d,@a,@c,@s,@q,@u,@am,@di,@n,@rn);
+            INSERT INTO expenses(user_id,date,account_id,category_id,subcategory_id,quantity,unit_id,amount,discount,note,receipt_item_name)
+            VALUES(@uid,@d,@a,@c,@s,@q,@u,@am,@di,@n,@rn);
             SELECT last_insert_rowid();",
-            new { d=e.Date.ToString("yyyy-MM-dd"), a=e.AccountId, c=e.CategoryId,
+            new { uid=Session.UserId, d=e.Date.ToString("yyyy-MM-dd"), a=e.AccountId, c=e.CategoryId,
                   s=e.SubcategoryId, q=e.Quantity, u=e.UnitId,
                   am=e.Amount, di=e.Discount, n=e.Note, rn=e.ReceiptItemName });
     }
@@ -86,15 +89,15 @@ public static class ExpenseService
         using var conn = Db.Open();
         conn.Execute(@"
             UPDATE expenses SET date=@d,account_id=@a,category_id=@c,subcategory_id=@s,
-                quantity=@q,unit_id=@u,amount=@am,discount=@di,note=@n WHERE id=@id",
+                quantity=@q,unit_id=@u,amount=@am,discount=@di,note=@n WHERE id=@id AND user_id=@uid",
             new { d=e.Date.ToString("yyyy-MM-dd"), a=e.AccountId, c=e.CategoryId,
                   s=e.SubcategoryId, q=e.Quantity, u=e.UnitId,
-                  am=e.Amount, di=e.Discount, n=e.Note, id=e.Id });
+                  am=e.Amount, di=e.Discount, n=e.Note, id=e.Id, uid=Session.UserId });
     }
 
     public static void Delete(int id)
     {
         using var conn = Db.Open();
-        conn.Execute("DELETE FROM expenses WHERE id=@id", new { id });
+        conn.Execute("DELETE FROM expenses WHERE id=@id AND user_id=@uid", new { id, uid = Session.UserId });
     }
 }

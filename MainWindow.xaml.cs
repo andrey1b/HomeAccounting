@@ -216,6 +216,14 @@ public partial class MainWindow : Window
         MiRefs.Header    = AppLoc.T("menu_refs");
         MiCatsExp.Header = AppLoc.T("menu_cats_exp");
         MiCatsInc.Header = AppLoc.T("menu_cats_inc");
+        MiCurrencies.Header = AppLoc.T("menu_currencies");
+        MiAccounting.Header = AppLoc.T("menu_accounting");
+        MiBudgets.Header  = AppLoc.T("menu_budgets");
+        MiDebts.Header    = AppLoc.T("menu_debts");
+        MiDeposits.Header = AppLoc.T("menu_deposits");
+        MiUser.Header        = AppLoc.T("user_current", "name", Session.UserName);
+        MiSwitchUser.Header  = AppLoc.T("user_switch");
+        MiManageUsers.Header = AppLoc.T("user_manage");
         MiReports.Header  = AppLoc.T("menu_reports");
         MiMaint.Header        = AppLoc.T("menu_maint");
         MiOpenFolder.Header   = AppLoc.T("mi_open_folder");
@@ -1125,6 +1133,45 @@ public partial class MainWindow : Window
     private void MenuReports_Click(object sender, RoutedEventArgs e) =>
         new ReportsWindow { Owner = this }.ShowDialog();
 
+    // ─── Новые разделы (Учёт / Справочники) ──────────────────────────────────
+    private void MiBudgets_Click(object sender, RoutedEventArgs e) =>
+        new Views.BudgetsWindow { Owner = this }.ShowDialog();
+
+    private void MiDebts_Click(object sender, RoutedEventArgs e) =>
+        new Views.DebtsWindow { Owner = this }.ShowDialog();
+
+    private void MiDeposits_Click(object sender, RoutedEventArgs e) =>
+        new Views.DepositsWindow { Owner = this }.ShowDialog();
+
+    private void MiCurrencies_Click(object sender, RoutedEventArgs e) =>
+        new Views.CurrencyManagerWindow { Owner = this }.ShowDialog();
+
+    // ─── Пользователи ────────────────────────────────────────────────────────
+    private void MiSwitchUser_Click(object sender, RoutedEventArgs e)
+    {
+        var login = new Views.LoginWindow { Owner = this };
+        if (login.ShowDialog() != true) return;
+        Session.Set(login.SelectedUserId, login.SelectedUserName);
+        ReloadForCurrentUser();
+    }
+
+    private void MiManageUsers_Click(object sender, RoutedEventArgs e)
+    {
+        new Views.UsersWindow { Owner = this }.ShowDialog();
+        ApplyLoc();
+    }
+
+    private void ReloadForCurrentUser()
+    {
+        ApplyLoc();                 // обновляет имя пользователя в меню
+        InitFilters();
+        RefreshAccounts(null, null);
+        _datesInitialized = _trDatesInitialized = _detDatesInitialized = false;
+        if (MainTabs.SelectedIndex == 1) RefreshExpenses();
+        else if (MainTabs.SelectedIndex == 2) RefreshIncomes();
+        SetStatus(AppLoc.T("user_current", "name", Session.UserName), temporary: true);
+    }
+
     private void MiOpenFolder_Click(object sender, RoutedEventArgs e) =>
         System.Diagnostics.Process.Start("explorer.exe", AppContext.BaseDirectory);
 
@@ -1164,14 +1211,18 @@ public partial class MainWindow : Window
 
         using var conn = Db.Open();
         using var tr = conn.BeginTransaction();
-        conn.Execute("DELETE FROM item_mappings", transaction: tr);
-        conn.Execute("DELETE FROM expenses",      transaction: tr);
-        conn.Execute("DELETE FROM incomes",       transaction: tr);
-        conn.Execute("DELETE FROM transfers",     transaction: tr);
-        conn.Execute("DELETE FROM subcategories", transaction: tr);
-        conn.Execute("DELETE FROM categories",    transaction: tr);
-        conn.Execute("DELETE FROM accounts",      transaction: tr);
-        conn.Execute("DELETE FROM units",         transaction: tr);
+        var p = new { uid = Session.UserId };
+        conn.Execute("DELETE FROM item_mappings WHERE user_id=@uid", p, tr);
+        conn.Execute("DELETE FROM expenses      WHERE user_id=@uid", p, tr);
+        conn.Execute("DELETE FROM incomes       WHERE user_id=@uid", p, tr);
+        conn.Execute("DELETE FROM transfers     WHERE user_id=@uid", p, tr);
+        conn.Execute("DELETE FROM budgets       WHERE user_id=@uid", p, tr);
+        conn.Execute("DELETE FROM debts         WHERE user_id=@uid", p, tr);
+        conn.Execute("DELETE FROM deposits      WHERE user_id=@uid", p, tr);
+        conn.Execute("DELETE FROM subcategories WHERE user_id=@uid", p, tr);
+        conn.Execute("DELETE FROM categories    WHERE user_id=@uid", p, tr);
+        conn.Execute("DELETE FROM accounts      WHERE user_id=@uid", p, tr);
+        conn.Execute("DELETE FROM units         WHERE user_id=@uid", p, tr);
         tr.Commit();
 
         RefreshAccounts(null, null);

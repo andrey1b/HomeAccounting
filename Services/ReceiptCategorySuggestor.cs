@@ -217,7 +217,8 @@ public static class ReceiptCategorySuggestor
             "SELECT s.id AS SubId, s.name AS SubName, s.category_id AS CatId " +
             "FROM subcategories s " +
             "JOIN categories c ON c.id = s.category_id " +
-            "WHERE c.type = 'expense'"
+            "WHERE c.type = 'expense' AND c.user_id = @uid",
+            new { uid = Session.UserId }
         ).ToList();
     }
 }

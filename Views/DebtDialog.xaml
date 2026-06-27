@@ -1,0 +1,63 @@
+<Window x:Class="HomeAccounting.Views.DebtDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="430" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <StackPanel Margin="16">
+        <TextBlock x:Name="TbLblKind" FontWeight="Bold" Margin="0,0,0,4"/>
+        <ComboBox x:Name="CbKind" Margin="0,0,0,12" Padding="6,4"/>
+
+        <TextBlock x:Name="TbLblParty" FontWeight="Bold" Margin="0,0,0,4"/>
+        <TextBox x:Name="TbParty" Margin="0,0,0,12" Padding="6,4"/>
+
+        <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="150"/></Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock x:Name="TbLblAccount" FontWeight="Bold" Margin="0,0,0,4"/>
+                <ComboBox x:Name="CbAccount" DisplayMemberPath="Name" Padding="6,4"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <TextBlock x:Name="TbLblCurrency" FontWeight="Bold" Margin="0,0,0,4"/>
+                <ComboBox x:Name="CbCurrency" DisplayMemberPath="Code" Padding="6,4"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock x:Name="TbLblDate" FontWeight="Bold" Margin="0,0,0,4"/>
+                <DatePicker x:Name="DpDate"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <TextBlock x:Name="TbLblPercent" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBox x:Name="TbPercent" Padding="6,4"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock x:Name="TbLblAmount" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBox x:Name="TbAmount" Padding="6,4"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <TextBlock x:Name="TbLblBack" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBox x:Name="TbBack" Padding="6,4"/>
+            </StackPanel>
+        </Grid>
+
+        <CheckBox x:Name="CbClosed" Margin="0,0,0,8" Checked="CbClosed_Toggle" Unchecked="CbClosed_Toggle"/>
+        <StackPanel x:Name="PnlClose" Margin="0,0,0,12" Visibility="Collapsed">
+            <TextBlock x:Name="TbLblDateClose" FontWeight="Bold" Margin="0,0,0,4"/>
+            <DatePicker x:Name="DpClose"/>
+        </StackPanel>
+
+        <TextBlock x:Name="TbLblNote" FontWeight="Bold" Margin="0,0,0,4"/>
+        <TextBox x:Name="TbNote" Height="50" TextWrapping="Wrap" AcceptsReturn="True" Padding="6,4"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
+            <Button x:Name="BtnOk" Width="110" Height="30" Margin="0,0,16,0" IsDefault="True" Click="BtnOk_Click"/>
+            <Button x:Name="BtnCancel" Width="110" Height="30" IsCancel="True"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

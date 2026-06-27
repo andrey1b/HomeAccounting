@@ -15,17 +15,17 @@ public static class AccountDetailService
                    SUM(combined.income)  AS TotalIncome
             FROM (
                 SELECT account_id, date, amount*(1-discount/100) AS expense, 0.0 AS income
-                FROM expenses WHERE date >= @from AND date <= @to
+                FROM expenses WHERE user_id = @uid AND date >= @from AND date <= @to
                   AND (@aid IS NULL OR account_id = @aid)
                 UNION ALL
                 SELECT account_id, date, 0.0, amount
-                FROM incomes  WHERE date >= @from AND date <= @to
+                FROM incomes  WHERE user_id = @uid AND date >= @from AND date <= @to
                   AND (@aid IS NULL OR account_id = @aid)
             ) combined
             JOIN accounts a ON a.id = combined.account_id
             GROUP BY combined.account_id, combined.date
             ORDER BY combined.date DESC, a.name",
-            new { from = from.ToString("yyyy-MM-dd"), to = to.ToString("yyyy-MM-dd"), aid = accountId })
+            new { uid = Session.UserId, from = from.ToString("yyyy-MM-dd"), to = to.ToString("yyyy-MM-dd"), aid = accountId })
             .ToList();
 
         var groups = new List<DetailGroup>();
@@ -47,8 +47,8 @@ public static class AccountDetailService
                 FROM expenses e
                 LEFT JOIN categories    c  ON c.id  = e.category_id
                 LEFT JOIN subcategories s2 ON s2.id = e.subcategory_id
-                WHERE e.account_id = @aid AND e.date = @dt ORDER BY e.id",
-                new { aid = g.AccountId, dt = dateRaw }).ToList();
+                WHERE e.user_id = @uid AND e.account_id = @aid AND e.date = @dt ORDER BY e.id",
+                new { uid = Session.UserId, aid = g.AccountId, dt = dateRaw }).ToList();
             if (expRows.Count > 0)
                 g.Sections.Add(new DetailSection
                 {
@@ -62,8 +62,8 @@ public static class AccountDetailService
                 FROM incomes i
                 LEFT JOIN categories    c  ON c.id  = i.category_id
                 LEFT JOIN subcategories s2 ON s2.id = i.subcategory_id
-                WHERE i.account_id = @aid AND i.date = @dt ORDER BY i.id",
-                new { aid = g.AccountId, dt = dateRaw }).ToList();
+                WHERE i.user_id = @uid AND i.account_id = @aid AND i.date = @dt ORDER BY i.id",
+                new { uid = Session.UserId, aid = g.AccountId, dt = dateRaw }).ToList();
             if (incRows.Count > 0)
                 g.Sections.Add(new DetailSection
                 {
@@ -80,9 +80,9 @@ public static class AccountDetailService
                 FROM transfers t
                 JOIN accounts af1 ON af1.id = t.from_account_id
                 JOIN accounts af2 ON af2.id = t.to_account_id
-                WHERE (t.from_account_id = @aid OR t.to_account_id = @aid) AND t.date = @dt
+                WHERE t.user_id = @uid AND (t.from_account_id = @aid OR t.to_account_id = @aid) AND t.date = @dt
                 ORDER BY t.id",
-                new { aid = g.AccountId, dt = dateRaw }).ToList();
+                new { uid = Session.UserId, aid = g.AccountId, dt = dateRaw }).ToList();
             if (trRows.Count > 0)
                 g.Sections.Add(new DetailSection
                 {
