@@ -229,6 +229,8 @@ public partial class MainWindow : Window
         MiOpenFolder.Header   = AppLoc.T("mi_open_folder");
         MiOpenSite.Header     = AppLoc.T("mi_open_site");
         MiCheckUpdate.Header  = AppLoc.T("mi_check_update");
+        MiDbExport.Header     = AppLoc.T("mi_db_export");
+        MiDbImport.Header     = AppLoc.T("mi_db_import");
         MiClearDb.Header      = AppLoc.T("mi_clear_db");
         MiVacuumDb.Header     = AppLoc.T("mi_vacuum_db");
         MiLang.Header    = AppLoc.T("menu_lang");
@@ -1243,6 +1245,62 @@ public partial class MainWindow : Window
         using var conn = Db.Open();
         conn.Execute("VACUUM");
         MessageBox.Show("База данных сжата.", "Готово", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    // ─── Перенос базы данных ─────────────────────────────────────────────────
+    private void MiDbExport_Click(object sender, RoutedEventArgs e)
+    {
+        var sfd = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter   = "База данных|*.db",
+            FileName = $"homeaccounting_backup_{DateTime.Today:yyyy-MM-dd}.db",
+            Title    = AppLoc.T("mi_db_export")
+        };
+        if (sfd.ShowDialog() != true) return;
+        try
+        {
+            Db.Backup(sfd.FileName);
+            MessageBox.Show(AppLoc.T("msg_db_exported", "path", sfd.FileName),
+                AppLoc.T("mi_db_export"), MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, AppLoc.T("mi_db_export"), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void MiDbImport_Click(object sender, RoutedEventArgs e)
+    {
+        var ofd = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = "База данных|*.db",
+            Title  = AppLoc.T("mi_db_import")
+        };
+        if (ofd.ShowDialog() != true) return;
+
+        if (!Db.IsValidDb(ofd.FileName))
+        {
+            MessageBox.Show(AppLoc.T("msg_db_invalid"), AppLoc.T("mi_db_import"),
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        if (MessageBox.Show(AppLoc.T("msg_db_import_confirm"), AppLoc.T("mi_db_import"),
+                MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+
+        try
+        {
+            Db.RestoreFrom(ofd.FileName);
+            MessageBox.Show(AppLoc.T("msg_db_restored"), AppLoc.T("mi_db_import"),
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            // перезапуск, чтобы применить миграции и перечитать данные
+            var exe = Environment.ProcessPath;
+            if (!string.IsNullOrEmpty(exe)) System.Diagnostics.Process.Start(exe);
+            Application.Current.Shutdown();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, AppLoc.T("mi_db_import"), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private void MenuCatsExpense_Click(object sender, RoutedEventArgs e)

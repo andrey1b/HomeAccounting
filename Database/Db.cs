@@ -30,6 +30,48 @@ public static class Db
         return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(password)));
     }
 
+    /// <summary>Консистентный снимок всей базы (все пользователи и таблицы) в файл dest.</summary>
+    public static void Backup(string dest)
+    {
+        EnsureDataDir();
+        using var src = Open();
+        using var dst = new SqliteConnection($"Data Source={dest}");
+        dst.Open();
+        src.BackupDatabase(dst);
+    }
+
+    /// <summary>Проверяет, что файл — это база «Домашнего бюджета» (есть таблица users).</summary>
+    public static bool IsValidDb(string path)
+    {
+        try
+        {
+            using var c = new SqliteConnection($"Data Source={path};Mode=ReadOnly");
+            c.Open();
+            return c.ExecuteScalar<long>(
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('users','accounts')") >= 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>Восстанавливает базу из файла src. Текущая база сохраняется рядом как .bak_restore.
+    /// Возвращает путь к страховочной копии.</summary>
+    public static string RestoreFrom(string src)
+    {
+        if (!IsValidDb(src))
+            throw new InvalidDataException("Файл не является базой данных «Домашнего бюджета».");
+
+        EnsureDataDir();
+        string safety = DbPath + ".bak_restore";
+        if (File.Exists(DbPath)) File.Copy(DbPath, safety, overwrite: true);
+
+        // убрать возможные WAL/SHM текущей базы
+        foreach (var ext in new[] { "-wal", "-shm" })
+            try { if (File.Exists(DbPath + ext)) File.Delete(DbPath + ext); } catch { }
+
+        File.Copy(src, DbPath, overwrite: true);
+        return safety;
+    }
+
     public static void Init()
     {
         EnsureDataDir();

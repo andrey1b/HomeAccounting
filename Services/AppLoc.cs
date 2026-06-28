@@ -56,6 +56,14 @@ public static class AppLoc
         ["mi_check_update"]  = ["Перевірити оновлення",    "Проверить обновления",       "Check for updates"],
         ["mi_clear_db"]      = ["Очистити БД…",             "Очистить БД…",               "Clear DB…"],
         ["mi_vacuum_db"]     = ["Стиснути БД",              "Сжать БД",                   "Compact DB"],
+        ["mi_db_export"]     = ["Вивантажити базу даних…",  "Выгрузить базу данных…",     "Export database…"],
+        ["mi_db_import"]     = ["Завантажити базу даних…",  "Загрузить базу данных…",     "Import database…"],
+        ["msg_db_exported"]  = ["Базу збережено:\n{path}",  "База сохранена:\n{path}",    "Database saved:\n{path}"],
+        ["msg_db_invalid"]   = ["Файл не є базою даних «Домашнього бюджету».", "Файл не является базой данных «Домашнего бюджета».", "File is not a Home Budget database."],
+        ["msg_db_import_confirm"] = ["Поточна база буде замінена обраним файлом (з неї буде зроблено резервну копію). Продовжити?",
+                                     "Текущая база будет заменена выбранным файлом (с неё будет сделана резервная копия). Продолжить?",
+                                     "Current database will be replaced (a backup will be made). Continue?"],
+        ["msg_db_restored"]  = ["Базу завантажено. Програма перезапуститься.", "База загружена. Программа перезапустится.", "Database imported. The app will restart."],
 
         // Buttons
         ["btn_add"]      = ["Додати",    "Добавить", "Add"],
