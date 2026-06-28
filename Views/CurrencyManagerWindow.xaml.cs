@@ -28,6 +28,7 @@ public partial class CurrencyManagerWindow : Window
         ColDef.Header = AppLoc.T("cur_default");
         BtnRateAdd.Content = AppLoc.T("btn_add");
         BtnRateDel.Content = AppLoc.T("btn_delete");
+        BtnRateDownload.Content = AppLoc.T("rate_download");
         ColRDate.Header = AppLoc.T("rate_date");
         ColRCur.Header = AppLoc.T("col_currency");
         ColRVal.Header = AppLoc.T("rate_value");
@@ -82,5 +83,28 @@ public partial class CurrencyManagerWindow : Window
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         CurrencyService.DeleteRate(sel.Id);
         RefreshRates();
+    }
+
+    private void BtnRateDownload_Click(object sender, RoutedEventArgs e)
+    {
+        Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+        BtnRateDownload.IsEnabled = false;
+        try
+        {
+            var (count, date) = CurrencyService.DownloadRatesNbu();
+            RefreshRates();
+            MessageBox.Show(AppLoc.T("rate_downloaded", "count", count.ToString(), "date", date),
+                AppLoc.T("currencies_title"), MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(AppLoc.T("rate_download_err") + "\n" + ex.Message,
+                AppLoc.T("currencies_title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+        finally
+        {
+            Mouse.OverrideCursor = null;
+            BtnRateDownload.IsEnabled = true;
+        }
     }
 }

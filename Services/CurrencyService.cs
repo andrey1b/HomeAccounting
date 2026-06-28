@@ -82,4 +82,45 @@ public static class CurrencyService
         using var conn = Db.Open();
         conn.Execute("DELETE FROM exchange_rates WHERE id=@id", new { id });
     }
+
+    /// <summary>Скачивает курсы валют с сайта НБУ (bank.gov.ua) и записывает в exchange_rates.
+    /// Возвращает (число обновлённых валют, дата курса). Бросает исключение при ошибке сети.</summary>
+    public static (int count, string date) DownloadRatesNbu()
+    {
+        using var http = new System.Net.Http.HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+        var json = http.GetStringAsync("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json")
+                       .GetAwaiter().GetResult();
+
+        // code -> (rate, isoDate) из ответа НБУ (UAH за 1 единицу)
+        var nbu = new Dictionary<string, (double rate, string date)>(StringComparer.OrdinalIgnoreCase);
+        using (var doc = System.Text.Json.JsonDocument.Parse(json))
+        {
+            foreach (var el in doc.RootElement.EnumerateArray())
+            {
+                var cc = el.GetProperty("cc").GetString() ?? "";
+                double rate = el.GetProperty("rate").GetDouble();
+                var exdate = el.TryGetProperty("exchangedate", out var d) ? d.GetString() ?? "" : "";
+                string iso = DateTime.TryParseExact(exdate, "dd.MM.yyyy", null,
+                                System.Globalization.DateTimeStyles.None, out var dt)
+                             ? dt.ToString("yyyy-MM-dd") : DateTime.Today.ToString("yyyy-MM-dd");
+                if (!string.IsNullOrEmpty(cc)) nbu[cc] = (rate, iso);
+            }
+        }
+
+        using var conn = Db.Open();
+        int count = 0; string usedDate = DateTime.Today.ToString("yyyy-MM-dd");
+        // курс ставим всем валютам кроме базовой (по умолчанию)
+        var curs = conn.Query<Currency>(
+            "SELECT id, code, is_default AS IsDefault FROM currencies WHERE is_default=0").ToList();
+        foreach (var c in curs)
+        {
+            if (!nbu.TryGetValue(c.Code, out var v)) continue;
+            conn.Execute("DELETE FROM exchange_rates WHERE currency_id=@id AND date=@d",
+                new { id = c.Id, d = v.date });
+            conn.Execute("INSERT INTO exchange_rates(currency_id,date,rate) VALUES(@id,@d,@r)",
+                new { id = c.Id, d = v.date, r = v.rate });
+            usedDate = v.date; count++;
+        }
+        return (count, usedDate);
+    }
 }

@@ -21,4 +21,10 @@ public class Budget
     public string PlanStr   => $"{Plan:N2}";
     public string FactStr   => $"{Fact:N2}";
     public string DiffStr   => $"{Diff:N2}";
+    public bool   DiffNegative => Diff < 0;
+
+    public double Percent   => Plan > 0 ? Fact / Plan * 100 : 0;
+    public string PercentStr => $"{Math.Round(Percent)}%";
+    public bool   IsOver    => Fact > Plan;                 // красный — перерасход
+    public bool   IsUnder   => Fact > 0 && Fact <= Plan;    // зелёный — в рамках
 }

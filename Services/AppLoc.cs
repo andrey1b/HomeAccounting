@@ -291,9 +291,27 @@ public static class AppLoc
         ["lbl_type"]       = ["Тип:",                       "Тип:",                          "Type:"],
         ["budget_plan"]    = ["План",                       "План",                          "Plan"],
         ["budget_fact"]    = ["Факт",                       "Факт",                          "Fact"],
-        ["budget_diff"]    = ["Залишок",                    "Остаток",                       "Left"],
+        ["budget_diff"]    = ["Різниця",                    "Разница",                       "Difference"],
+        ["budget_done"]    = ["Виконано, %",               "Выполнено, %",                  "Done, %"],
         ["budget_total"]   = ["План: {plan}  •  Факт: {fact}", "План: {plan}  •  Факт: {fact}", "Plan: {plan}  •  Fact: {fact}"],
         ["dlg_budget_title"]=["Бюджет",                     "Бюджет",                        "Budget"],
+        ["budget_tab_exp"] = ["Бюджет витрат",             "Бюджет расходов",               "Expense budget"],
+        ["budget_tab_inc"] = ["Бюджет доходів",            "Бюджет доходов",                "Income budget"],
+        ["btn_today"]      = ["Сьогодні",                  "Сегодня",                       "Today"],
+        ["btn_copy"]       = ["Копіювати",                 "Копировать",                    "Copy"],
+        ["btn_print"]      = ["Друк",                      "Печать",                        "Print"],
+        ["btn_export"]     = ["Експорт",                   "Экспорт",                       "Export"],
+        ["budget_copy_title"]=["Копіювання бюджету",       "Копирование бюджета",           "Copy budget"],
+        ["budget_copy_from"]=["Скопіювати бюджет з",       "Скопировать бюджет из",         "Copy budget from"],
+        ["budget_copy_to"] = ["В",                         "В",                             "To"],
+        ["budget_copy_exp"]= ["Копіювати бюджет витрат",   "Копировать бюджет расходов",    "Copy expense budget"],
+        ["budget_copy_inc"]= ["Копіювати бюджет доходів",  "Копировать бюджет доходов",     "Copy income budget"],
+        ["budget_copied"]  = ["Скопійовано планів: {count}", "Скопировано планов: {count}", "Plans copied: {count}"],
+
+        // Скачивание курсов
+        ["rate_download"]    = ["Завантажити курси валют",  "Скачать курсы валют",           "Download rates"],
+        ["rate_downloaded"]  = ["Оновлено валют: {count} (на {date})", "Обновлено валют: {count} (на {date})", "Updated currencies: {count} ({date})"],
+        ["rate_download_err"]= ["Не вдалося завантажити курси валют.", "Не удалось скачать курсы валют.", "Failed to download rates."],
 
         // Вклады
         ["deposits_title"] = ["Вклади",                     "Вклады",                        "Deposits"],

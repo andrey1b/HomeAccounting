@@ -93,4 +93,42 @@ public static class BudgetService
         using var conn = Db.Open();
         conn.Execute("DELETE FROM budgets WHERE id=@id AND user_id=@uid", new { id, uid = Session.UserId });
     }
+
+    /// <summary>Копирует планы бюджета из одного месяца в другой (для выбранных типов).
+    /// Существующие планы целевого месяца по этим типам заменяются. Возвращает число скопированных строк.</summary>
+    public static int CopyMonth(int fromYear, int fromMonth, int toYear, int toMonth,
+                                bool copyExpense, bool copyIncome)
+    {
+        var types = new List<string>();
+        if (copyExpense) types.Add("expense");
+        if (copyIncome)  types.Add("income");
+        if (types.Count == 0) return 0;
+
+        using var conn = Db.Open();
+        using var tr = conn.BeginTransaction();
+        int copied = 0;
+        foreach (var t in types)
+        {
+            conn.Execute("DELETE FROM budgets WHERE user_id=@uid AND year=@y AND month=@m AND type=@t",
+                new { uid = Session.UserId, y = toYear, m = toMonth, t }, tr);
+
+            var src = conn.Query<Budget>(@"
+                SELECT category_id AS CategoryId, subcategory_id AS SubcategoryId,
+                       currency_id AS CurrencyId, plan, note
+                FROM budgets WHERE user_id=@uid AND year=@y AND month=@m AND type=@t",
+                new { uid = Session.UserId, y = fromYear, m = fromMonth, t }, tr).ToList();
+
+            foreach (var b in src)
+            {
+                conn.Execute(@"
+                    INSERT INTO budgets(user_id,type,year,month,category_id,subcategory_id,currency_id,plan,note)
+                    VALUES(@uid,@t,@y,@m,@c,@s,@cur,@p,@n)",
+                    new { uid = Session.UserId, t, y = toYear, m = toMonth, c = b.CategoryId,
+                          s = b.SubcategoryId, cur = b.CurrencyId, p = b.Plan, n = b.Note }, tr);
+                copied++;
+            }
+        }
+        tr.Commit();
+        return copied;
+    }
 }

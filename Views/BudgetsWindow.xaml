@@ -1,34 +1,119 @@
 <Window x:Class="HomeAccounting.Views.BudgetsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Width="760" Height="520" WindowStartupLocation="CenterOwner">
-    <DockPanel Margin="10">
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
-            <TextBlock x:Name="TbLblYear" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,6,0"/>
-            <ComboBox x:Name="CbYear" Width="80" Padding="6,3" SelectionChanged="Filter_Changed"/>
-            <TextBlock x:Name="TbLblMonth" VerticalAlignment="Center" FontWeight="Bold" Margin="14,0,6,0"/>
-            <ComboBox x:Name="CbMonth" Width="120" Padding="6,3" SelectionChanged="Filter_Changed"/>
-            <TextBlock x:Name="TbLblType" VerticalAlignment="Center" FontWeight="Bold" Margin="14,0,6,0"/>
-            <ComboBox x:Name="CbType" Width="110" Padding="6,3" SelectionChanged="Filter_Changed"/>
-            <Button x:Name="BtnAdd"  Width="90" Height="28" Margin="20,0,6,0" Click="BtnAdd_Click"/>
-            <Button x:Name="BtnEdit" Width="90" Height="28" Margin="0,0,6,0" Click="BtnEdit_Click"/>
-            <Button x:Name="BtnDel"  Width="90" Height="28" Click="BtnDel_Click"/>
+        Width="1040" Height="660" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <Style x:Key="TypeTab" TargetType="Button">
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="MonthBtn" TargetType="Button">
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="0,4"/>
+        </Style>
+    </Window.Resources>
+
+    <DockPanel Margin="8">
+        <!-- Правая панель: год/месяц + действия -->
+        <StackPanel DockPanel.Dock="Right" Width="180" Margin="10,0,0,0">
+            <Border BorderBrush="#cfd8e3" BorderThickness="1" Padding="6" Margin="0,0,0,10">
+                <StackPanel>
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="32"/><ColumnDefinition Width="*"/><ColumnDefinition Width="32"/></Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" x:Name="BtnPrevYear" Content="◀" Click="PrevYear_Click"/>
+                        <TextBlock Grid.Column="1" x:Name="TbYear" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Button Grid.Column="2" x:Name="BtnNextYear" Content="▶" Click="NextYear_Click"/>
+                    </Grid>
+                    <UniformGrid x:Name="MonthGrid" Rows="4" Columns="3">
+                        <Button Style="{StaticResource MonthBtn}" Tag="1"  Click="Month_Click"/>
+                        <Button Style="{StaticResource MonthBtn}" Tag="2"  Click="Month_Click"/>
+                        <Button Style="{StaticResource MonthBtn}" Tag="3"  Click="Month_Click"/>
+                        <Button Style="{StaticResource MonthBtn}" Tag="4"  Click="Month_Click"/>
+                        <Button Style="{StaticResource MonthBtn}" Tag="5"  Click="Month_Click"/>
+                        <Button Style="{StaticResource MonthBtn}" Tag="6"  Click="Month_Click"/>
+                        <Button Style="{StaticResource MonthBtn}" Tag="7"  Click="Month_Click"/>
+                        <Button Style="{StaticResource MonthBtn}" Tag="8"  Click="Month_Click"/>
+                        <Button Style="{StaticResource MonthBtn}" Tag="9"  Click="Month_Click"/>
+                        <Button Style="{StaticResource MonthBtn}" Tag="10" Click="Month_Click"/>
+                        <Button Style="{StaticResource MonthBtn}" Tag="11" Click="Month_Click"/>
+                        <Button Style="{StaticResource MonthBtn}" Tag="12" Click="Month_Click"/>
+                    </UniformGrid>
+                    <Button x:Name="BtnToday" Margin="2,8,2,0" Padding="0,5" Click="Today_Click"/>
+                </StackPanel>
+            </Border>
+            <Button x:Name="BtnCopy"   Height="34" Margin="0,0,0,8" Click="BtnCopy_Click"/>
+            <Button x:Name="BtnPrint"  Height="34" Margin="0,0,0,8" Click="BtnPrint_Click"/>
+            <Button x:Name="BtnExport" Height="34" Click="BtnExport_Click"/>
         </StackPanel>
 
-        <Border DockPanel.Dock="Bottom" BorderBrush="#ddd" BorderThickness="0,1,0,0" Padding="0,6,0,0" Margin="0,6,0,0">
-            <TextBlock x:Name="TbTotal" FontWeight="Bold" HorizontalAlignment="Right"/>
+        <!-- Верх: переключение типа бюджета -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button x:Name="BtnTypeExp" Style="{StaticResource TypeTab}" Click="TypeExp_Click"/>
+            <Button x:Name="BtnTypeInc" Style="{StaticResource TypeTab}" Click="TypeInc_Click"/>
+        </StackPanel>
+
+        <!-- Низ: кнопки записей -->
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,8,0,0">
+            <Button x:Name="BtnAdd"  Width="110" Height="30" Margin="0,0,6,0" Click="BtnAdd_Click"/>
+            <Button x:Name="BtnEdit" Width="110" Height="30" Margin="0,0,6,0" Click="BtnEdit_Click"/>
+            <Button x:Name="BtnDel"  Width="110" Height="30" Click="BtnDel_Click"/>
+        </StackPanel>
+
+        <!-- Итоги по валютам -->
+        <Border DockPanel.Dock="Bottom" Background="#FFFDE7" BorderBrush="#e0e0c0" BorderThickness="1" Padding="8,6" Margin="0,8,0,0">
+            <ItemsControl x:Name="TotalsList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" HorizontalAlignment="Right" FontWeight="SemiBold" Margin="0,1"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Border>
 
-        <DataGrid x:Name="Dg" AutoGenerateColumns="False" IsReadOnly="True"
-                  CanUserAddRows="False" HeadersVisibility="Column"
-                  GridLinesVisibility="Horizontal" RowHeaderWidth="0"
+        <!-- Таблица бюджета -->
+        <DataGrid x:Name="Dg" CanUserAddRows="False" RowHeaderWidth="0"
                   MouseDoubleClick="Dg_DoubleClick">
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="ColCat"  Binding="{Binding CategoryName}"    Width="*"/>
-                <DataGridTextColumn x:Name="ColSub"  Binding="{Binding SubcategoryName}" Width="*"/>
-                <DataGridTextColumn x:Name="ColPlan" Binding="{Binding PlanStr}"  Width="120"/>
-                <DataGridTextColumn x:Name="ColFact" Binding="{Binding FactStr}"  Width="120"/>
-                <DataGridTextColumn x:Name="ColDiff" Binding="{Binding DiffStr}"  Width="120"/>
+                <DataGridTextColumn x:Name="ColCat" Binding="{Binding CategoryName}"    Width="2*"/>
+                <DataGridTextColumn x:Name="ColSub" Binding="{Binding SubcategoryName}" Width="2*"/>
+                <DataGridTextColumn x:Name="ColPlan" Binding="{Binding PlanStr}" Width="*" ElementStyle="{StaticResource RightCell}"/>
+                <DataGridTextColumn x:Name="ColFact" Binding="{Binding FactStr}" Width="*" ElementStyle="{StaticResource RightCell}"/>
+                <DataGridTemplateColumn x:Name="ColDone" Width="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border Margin="1" Padding="0,2">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsUnder}" Value="True">
+                                                <Setter Property="Background" Value="#C8E6C9"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsOver}" Value="True">
+                                                <Setter Property="Background" Value="#F5C6CB"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBlock Text="{Binding PercentStr}" HorizontalAlignment="Center"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn x:Name="ColDiff" Binding="{Binding DiffStr}" Width="*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource RightCell}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DiffNegative}" Value="True">
+                                    <Setter Property="Foreground" Value="#C0392B"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn x:Name="ColNote" Binding="{Binding Note}" Width="1.5*"/>
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

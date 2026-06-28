@@ -27,7 +27,8 @@
             <DockPanel Margin="8">
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
                     <Button x:Name="BtnRateAdd" Width="90" Height="28" Margin="0,0,6,0" Click="BtnRateAdd_Click"/>
-                    <Button x:Name="BtnRateDel" Width="90" Height="28" Click="BtnRateDel_Click"/>
+                    <Button x:Name="BtnRateDel" Width="90" Height="28" Margin="0,0,6,0" Click="BtnRateDel_Click"/>
+                    <Button x:Name="BtnRateDownload" Width="180" Height="28" Click="BtnRateDownload_Click"/>
                 </StackPanel>
                 <DataGrid x:Name="DgRates" AutoGenerateColumns="False" IsReadOnly="True"
                           CanUserAddRows="False" HeadersVisibility="Column" RowHeaderWidth="0"
