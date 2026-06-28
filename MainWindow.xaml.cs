@@ -61,6 +61,11 @@ public partial class MainWindow : Window
 
     public void OnReceiptImported(ImportResult result)
     {
+        if (result.Duplicate)
+        {
+            SetStatus(AppLoc.T("receipt_dup_skipped"), temporary: true);
+            return;
+        }
         if (result.Count == 0)
         {
             SetStatus(AppLoc.T("msg_receipt_no_items"), temporary: true);
@@ -970,7 +975,11 @@ public partial class MainWindow : Window
             var (result, error) = Services.ReceiptHttpReceiver.FetchAndImport(url);
             Dispatcher.Invoke(() =>
             {
-                if (result != null && result.Count > 0)
+                if (result != null && result.Duplicate)
+                {
+                    OnReceiptImported(result);
+                }
+                else if (result != null && result.Count > 0)
                 {
                     OnReceiptImported(result);
                 }

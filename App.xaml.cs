@@ -96,7 +96,7 @@ public partial class App : Application
         try
         {
             File.WriteAllBytes(tmp, raw);
-            var result = ReceiptImportService.Import(tmp, AppSettings.Load().DefaultAccountId);
+            var result = ReceiptImportService.Import(tmp, AppSettings.Load().DefaultAccountId, ConfirmDuplicate);
             if (MainWindow is MainWindow mw)
                 mw.OnReceiptImported(result);
         }
@@ -110,6 +110,13 @@ public partial class App : Application
             try { File.Delete(tmp); } catch { }
         }
     }
+
+    /// <summary>Спросить пользователя, вносить ли повторно уже импортированный чек.</summary>
+    private bool ConfirmDuplicate(ParsedReceipt r) =>
+        Dispatcher.Invoke(() =>
+            MessageBox.Show(
+                AppLoc.T("receipt_dup_confirm", "no", r.ReceiptNo, "date", r.Date.ToString("dd.MM.yyyy")),
+                AppLoc.T("app_title"), MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes);
 
     private void StartWatcher(string folder)
     {
@@ -132,7 +139,7 @@ public partial class App : Application
         try
         {
             var settings = AppSettings.Load();
-            var result   = ReceiptImportService.Import(e.FullPath, settings.DefaultAccountId);
+            var result   = ReceiptImportService.Import(e.FullPath, settings.DefaultAccountId, ConfirmDuplicate);
 
             Dispatcher.Invoke(() =>
             {

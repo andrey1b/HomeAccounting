@@ -221,6 +221,8 @@ public static class AppLoc
         ["msg_no_updates"]       = ["Програма актуальна. Оновлень немає.", "Программа актуальна. Обновлений нет.", "Program is up to date."],
         ["msg_receipt_error"]    = ["Помилка читання чека.",               "Ошибка чтения чека.",                   "Error reading receipt."],
         ["msg_receipt_no_items"] = ["У чеку не знайдено товарів.",         "В чеке не найдено товаров.",            "No items found in receipt."],
+        ["receipt_dup_confirm"]  = ["Чек №{no} від {date} вже вносився.\nВнести ще раз?", "Чек №{no} от {date} уже вносился.\nВнести ещё раз?", "Receipt #{no} dated {date} was already imported.\nImport again?"],
+        ["receipt_dup_skipped"]  = ["Чек пропущено (вже вносився).",      "Чек пропущен (уже вносился).",          "Receipt skipped (already imported)."],
         ["status_watching"]      = ["Слідкую за чеками",                   "Слежу за чеками",                       "Watching receipts"],
         ["status_ready"]         = ["Готово",                              "Готово",                                "Ready"],
 

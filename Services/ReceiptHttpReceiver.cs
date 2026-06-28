@@ -418,12 +418,25 @@ async function send() {
             try
             {
                 File.WriteAllBytes(tmp, bytes);
-                var result = ReceiptImportService.Import(tmp, AppSettings.Load().DefaultAccountId);
+                var result = ReceiptImportService.Import(tmp, AppSettings.Load().DefaultAccountId, ConfirmDuplicate);
                 return (result, null);
             }
             finally { try { File.Delete(tmp); } catch { } }
         }
         catch (Exception ex) { return (null, ex.Message); }
+    }
+
+    // Спросить (на UI-потоке), вносить ли повторно уже импортированный чек
+    static bool ConfirmDuplicate(ParsedReceipt r)
+    {
+        var ui = _ui;
+        if (ui == null) return true;
+        return ui.Invoke(() =>
+            System.Windows.MessageBox.Show(
+                AppLoc.T("receipt_dup_confirm", "no", r.ReceiptNo, "date", r.Date.ToString("dd.MM.yyyy")),
+                AppLoc.T("app_title"),
+                System.Windows.MessageBoxButton.YesNo,
+                System.Windows.MessageBoxImage.Warning) == System.Windows.MessageBoxResult.Yes);
     }
 
     // Правильный API: /ws/api_public/rro/chkAllWeb → JSON { checkXml: "<base64 XML>" }
