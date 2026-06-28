@@ -34,10 +34,14 @@ public static class Db
     public static void Backup(string dest)
     {
         EnsureDataDir();
-        using var src = Open();
-        using var dst = new SqliteConnection($"Data Source={dest}");
-        dst.Open();
-        src.BackupDatabase(dst);
+        using (var src = Open())
+        using (var dst = new SqliteConnection($"Data Source={dest};Pooling=False"))
+        {
+            dst.Open();
+            src.BackupDatabase(dst);
+        }
+        // освобождаем файловые дескрипторы из пула, иначе копию не удалить/не переместить
+        SqliteConnection.ClearAllPools();
     }
 
     /// <summary>Проверяет, что файл — это база «Домашнего бюджета» (есть таблица users).</summary>
@@ -45,7 +49,7 @@ public static class Db
     {
         try
         {
-            using var c = new SqliteConnection($"Data Source={path};Mode=ReadOnly");
+            using var c = new SqliteConnection($"Data Source={path};Mode=ReadOnly;Pooling=False");
             c.Open();
             return c.ExecuteScalar<long>(
                 "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('users','accounts')") >= 1;
@@ -61,6 +65,9 @@ public static class Db
             throw new InvalidDataException("Файл не является базой данных «Домашнего бюджета».");
 
         EnsureDataDir();
+        // освобождаем все пулы соединений к текущей базе, иначе файл занят
+        SqliteConnection.ClearAllPools();
+
         string safety = DbPath + ".bak_restore";
         if (File.Exists(DbPath)) File.Copy(DbPath, safety, overwrite: true);
 

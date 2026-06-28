@@ -77,6 +77,16 @@ public partial class App : Application
     {
         ReceiptHttpReceiver.Stop();
         _watcher?.Dispose();
+
+        // Автоматическая резервная копия при выходе
+        try
+        {
+            var s = AppSettings.Load();
+            if (s.AutoBackupEnabled && !string.IsNullOrWhiteSpace(s.AutoBackupFolder))
+                BackupService.RunAutoBackup(s.AutoBackupFolder, s.AutoBackupKeep);
+        }
+        catch { /* бэкап не должен мешать выходу */ }
+
         base.OnExit(e);
     }
 

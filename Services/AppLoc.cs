@@ -64,6 +64,15 @@ public static class AppLoc
                                      "Текущая база будет заменена выбранным файлом (с неё будет сделана резервная копия). Продолжить?",
                                      "Current database will be replaced (a backup will be made). Continue?"],
         ["msg_db_restored"]  = ["Базу завантажено. Програма перезапуститься.", "База загружена. Программа перезапустится.", "Database imported. The app will restart."],
+        ["mi_backup_settings"]= ["Налаштування резервних копій…", "Настройки резервного копирования…", "Backup settings…"],
+        ["backup_title"]     = ["Резервне копіювання",        "Резервное копирование",         "Backup"],
+        ["backup_enable"]    = ["Робити резервну копію при виході", "Делать резервную копию при выходе", "Create a backup on exit"],
+        ["backup_folder"]    = ["Папка для копій:",          "Папка для копий:",              "Backup folder:"],
+        ["backup_browse"]    = ["Огляд…",                    "Обзор…",                        "Browse…"],
+        ["backup_keep"]      = ["Скільки копій зберігати:",  "Сколько копий хранить:",        "How many backups to keep:"],
+        ["backup_now"]       = ["Зробити копію зараз",       "Сделать копию сейчас",          "Back up now"],
+        ["backup_saved_now"] = ["Копію збережено:\n{path}",  "Копия сохранена:\n{path}",      "Backup saved:\n{path}"],
+        ["backup_need_folder"]=["Вкажіть папку для копій.",  "Укажите папку для копий.",      "Specify a backup folder."],
 
         // Buttons
         ["btn_add"]      = ["Додати",    "Добавить", "Add"],

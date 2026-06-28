@@ -14,6 +14,11 @@ public class AppSettings
     public double WindowHeight     { get; set; } = 680;
     public bool   WindowMaximized  { get; set; } = false;
 
+    // Автоматическое резервное копирование при выходе
+    public bool   AutoBackupEnabled { get; set; } = false;
+    public string AutoBackupFolder  { get; set; } = "";
+    public int    AutoBackupKeep    { get; set; } = 10;
+
     private static string FilePath =>
         System.IO.Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),

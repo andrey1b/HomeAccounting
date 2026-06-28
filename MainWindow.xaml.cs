@@ -231,6 +231,7 @@ public partial class MainWindow : Window
         MiCheckUpdate.Header  = AppLoc.T("mi_check_update");
         MiDbExport.Header     = AppLoc.T("mi_db_export");
         MiDbImport.Header     = AppLoc.T("mi_db_import");
+        MiBackupSettings.Header = AppLoc.T("mi_backup_settings");
         MiClearDb.Header      = AppLoc.T("mi_clear_db");
         MiVacuumDb.Header     = AppLoc.T("mi_vacuum_db");
         MiLang.Header    = AppLoc.T("menu_lang");
@@ -1267,6 +1268,11 @@ public partial class MainWindow : Window
         {
             MessageBox.Show(ex.Message, AppLoc.T("mi_db_export"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+
+    private void MiBackupSettings_Click(object sender, RoutedEventArgs e)
+    {
+        new Views.BackupSettingsWindow { Owner = this }.ShowDialog();
     }
 
     private void MiDbImport_Click(object sender, RoutedEventArgs e)

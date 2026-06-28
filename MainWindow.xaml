@@ -60,6 +60,7 @@
                 <Separator/>
                 <MenuItem x:Name="MiDbExport"     Click="MiDbExport_Click"/>
                 <MenuItem x:Name="MiDbImport"     Click="MiDbImport_Click"/>
+                <MenuItem x:Name="MiBackupSettings" Click="MiBackupSettings_Click"/>
                 <Separator/>
                 <MenuItem x:Name="MiClearDb"      Click="MiClearDb_Click"/>
                 <MenuItem x:Name="MiVacuumDb"     Click="MiVacuumDb_Click"/>
