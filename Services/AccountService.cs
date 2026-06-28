@@ -10,6 +10,7 @@ public static class AccountService
         var sql = @"
             SELECT a.id, a.sort_order, a.name, a.note, a.initial_balance, a.is_hidden,
                    COALESCE(a.currency, '₴') AS Currency,
+                   a.currency_id AS CurrencyId,
                    COALESCE(a.icon,     '💰') AS Icon,
                    COALESCE(e.total,  0.0) AS TotalExpense,
                    COALESCE(i.total,  0.0) AS TotalIncome,

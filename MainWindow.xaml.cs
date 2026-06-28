@@ -474,7 +474,12 @@ public partial class MainWindow : Window
         for (int i = 0; i < accounts.Count; i++)
             accounts[i].RowNumber = i + 1;
         DgAccounts.ItemsSource = accounts;
-        TbTotalBalance.Text    = $"{accounts.Sum(a => a.Balance):N2} ₴";
+
+        // Общий баланс сводим в базовую валюту по курсам (для гривневых счетов курс=1)
+        var rates = CurrencyService.RatesToBase();
+        double totalBase = accounts.Sum(a =>
+            a.Balance * (a.CurrencyId.HasValue && rates.TryGetValue(a.CurrencyId.Value, out var r) ? r : 1.0));
+        TbTotalBalance.Text = $"{totalBase:N2} {CurrencyService.DefaultSymbol()}";
         PopulateReceiptAccountCombo();
     }
 

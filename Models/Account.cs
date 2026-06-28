@@ -10,6 +10,7 @@ public class Account
     public double InitialBalance { get; set; }
     public bool IsHidden { get; set; }
     public string Currency { get; set; } = "₴";
+    public int?   CurrencyId { get; set; }
     public string Icon { get; set; } = "💰";
 
     // Заполняется запросом с агрегатами

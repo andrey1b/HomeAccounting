@@ -25,6 +25,30 @@ public static class CurrencyService
         return conn.ExecuteScalar<int>("SELECT id FROM currencies WHERE is_default=1 ORDER BY id LIMIT 1");
     }
 
+    public static string DefaultSymbol()
+    {
+        using var conn = Db.Open();
+        return conn.ExecuteScalar<string>("SELECT symbol FROM currencies WHERE is_default=1 ORDER BY id LIMIT 1") ?? "₴";
+    }
+
+    /// <summary>Курс каждой валюты к базовой (последний по дате). Базовая = 1; без курса = 1.</summary>
+    public static Dictionary<int, double> RatesToBase()
+    {
+        using var conn = Db.Open();
+        var map = new Dictionary<int, double>();
+        int baseId = DefaultId();
+        foreach (var c in conn.Query("SELECT id, is_default AS IsDefault FROM currencies"))
+        {
+            int id = (int)(long)c.id;
+            if ((long)c.IsDefault == 1) { map[id] = 1.0; continue; }
+            var rate = conn.ExecuteScalar<double?>(
+                "SELECT rate FROM exchange_rates WHERE currency_id=@id ORDER BY date DESC, id DESC LIMIT 1",
+                new { id });
+            map[id] = rate is > 0 ? rate.Value : 1.0;
+        }
+        return map;
+    }
+
     public static int Add(Currency c)
     {
         using var conn = Db.Open();
