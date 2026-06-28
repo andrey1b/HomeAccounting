@@ -12,6 +12,10 @@ public partial class App : Application
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
+        // Пока показываем окно входа, открытых окон нет — иначе закрытие диалога
+        // запустит автозавершение приложения (OnLastWindowClose) и главное окно не создастся.
+        ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
         try {
 
         // Инициализация БД и настроек до входа (нужна таблица users)
@@ -41,6 +45,8 @@ public partial class App : Application
         Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, () => { });
         var main = new MainWindow();
         MainWindow = main;
+        // Главное окно создано — возвращаем обычное поведение завершения
+        ShutdownMode = ShutdownMode.OnMainWindowClose;
 
         // Минимальное время отображения заставки — 2 секунды
         var splashShown = System.Diagnostics.Stopwatch.StartNew();
