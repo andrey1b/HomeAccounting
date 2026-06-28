@@ -69,6 +69,10 @@
                 <MenuItem x:Name="MiLangRu" Tag="ru" IsCheckable="True" IsChecked="True" Click="MiLang_Click"/>
                 <MenuItem x:Name="MiLangEn" Tag="en" IsCheckable="True" Click="MiLang_Click"/>
             </MenuItem>
+            <MenuItem x:Name="MiTableTheme">
+                <MenuItem x:Name="MiThemeWindows" Tag="Windows" IsCheckable="True" Click="MiTheme_Click"/>
+                <MenuItem x:Name="MiThemeGarden"  Tag="Garden"  IsCheckable="True" Click="MiTheme_Click"/>
+            </MenuItem>
             <MenuItem x:Name="MiUser">
                 <MenuItem x:Name="MiSwitchUser"  Click="MiSwitchUser_Click"/>
                 <MenuItem x:Name="MiManageUsers" Click="MiManageUsers_Click"/>

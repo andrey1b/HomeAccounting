@@ -5,6 +5,7 @@ namespace HomeAccounting.Services;
 public class AppSettings
 {
     public string Lang             { get; set; } = "ru";
+    public string Theme            { get; set; } = "Garden";    // Garden | Windows
     public string XmlWatchFolder   { get; set; } = "";
     public int?   DefaultAccountId { get; set; } = null;
     public float  TableFontSize    { get; set; } = 9f;

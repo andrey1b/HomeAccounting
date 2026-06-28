@@ -9,6 +9,9 @@ public static class AppLoc
     {
         // Language menu
         ["menu_lang"]    = ["Мова",    "Язык",    "Language"],
+        ["menu_table_theme"] = ["Фон таблиць", "Фон таблиц", "Table background"],
+        ["theme_windows"]    = ["Windows",     "Windows",    "Windows"],
+        ["theme_garden"]     = ["Garden (Сад)", "Garden (Сад)", "Garden"],
         ["lang_ru"]      = ["Русский",    "Русский",    "Russian"],
         ["lang_en"]      = ["English",    "English",    "English"],
 

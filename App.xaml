@@ -38,13 +38,21 @@
             <Setter Property="Foreground" Value="Black"/>
             <Style.Triggers>
                 <Trigger Property="AlternationIndex" Value="1">
-                    <Setter Property="Background" Value="#F0F0F0"/>
+                    <Setter Property="Background" Value="{DynamicResource HA.Row.Alt}"/>
                 </Trigger>
                 <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#CCE5FF"/>
-                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Background" Value="{DynamicResource HA.Row.Sel}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource HA.Row.SelText}"/>
                 </Trigger>
             </Style.Triggers>
+        </Style>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="{DynamicResource HA.Header.Bg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HA.Header.Text}"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderBrush" Value="#D0D0D0"/>
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
         </Style>
     </Application.Resources>
 </Application>

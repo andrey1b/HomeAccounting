@@ -22,6 +22,7 @@ public partial class App : Application
         Db.Init();
         var settings = AppSettings.Load();
         AppLoc.SetLang(settings.Lang);
+        ThemeService.Apply(settings.Theme);
 
         // Экран входа с выбором пользователя и паролем
         var login = new Views.LoginWindow();

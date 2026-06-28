@@ -245,6 +245,12 @@ public partial class MainWindow : Window
         MiLangRu.IsChecked = AppLoc.Lang == "ru";
         MiLangEn.IsChecked = AppLoc.Lang == "en";
 
+        MiTableTheme.Header   = AppLoc.T("menu_table_theme");
+        MiThemeWindows.Header = AppLoc.T("theme_windows");
+        MiThemeGarden.Header  = AppLoc.T("theme_garden");
+        MiThemeWindows.IsChecked = ThemeService.Current == "Windows";
+        MiThemeGarden.IsChecked  = ThemeService.Current == "Garden";
+
         // Accounts sub-tab: Brief
         BtnAddAccount.Content    = AppLoc.T("btn_add");
         BtnEditAccount.Content   = AppLoc.T("btn_edit");
@@ -432,6 +438,25 @@ public partial class MainWindow : Window
         s.Save();
     }
 
+    private void MiTheme_Click(object sender, RoutedEventArgs e)
+    {
+        var theme = (string)((MenuItem)sender).Tag;
+        ThemeService.Apply(theme);
+        var s = AppSettings.Load();
+        s.Theme = theme;
+        s.Save();
+
+        MiThemeWindows.IsChecked = theme == "Windows";
+        MiThemeGarden.IsChecked  = theme == "Garden";
+
+        // перерисовать таблицы, где фон строк задаётся из кода
+        RefreshAccounts(null, null);
+        if (MainTabs.SelectedIndex == 1) RefreshExpenses();
+        else if (MainTabs.SelectedIndex == 2) RefreshIncomes();
+        if (_trDatesInitialized)  RefreshTransfers();
+        if (_detDatesInitialized) RefreshDetailed();
+    }
+
     // ─── Tabs ────────────────────────────────────────────────────────────────
 
     private void MainTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -569,10 +594,8 @@ public partial class MainWindow : Window
     private void BtnFontPlus_Click(object sender, RoutedEventArgs e)  => SetTableFontSize(_tableFontSize + 1f);
 
     // ─── Подсветка выбранной строки (WPF DataGrid: Счета и Переносы) ────────
-    private static readonly System.Windows.Media.SolidColorBrush RowSelBrush =
-        new(System.Windows.Media.Color.FromRgb(0xCC, 0xE5, 0xFF));
-    private static readonly System.Windows.Media.SolidColorBrush RowAltBrush =
-        new(System.Windows.Media.Color.FromRgb(0xF0, 0xF0, 0xF0));
+    private static System.Windows.Media.Brush RowSelBrush => ThemeService.RowSel;
+    private static System.Windows.Media.Brush RowAltBrush => ThemeService.RowAlt;
 
     private static void HighlightRows(DataGrid dg, SelectionChangedEventArgs e)
     {
