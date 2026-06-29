@@ -25,6 +25,7 @@ public static class AppLoc
         ["shop_none"]    = ["Зняти все",          "Снять все",          "Clear all"],
         ["shop_refresh"] = ["🔄 Оновити",         "🔄 Обновить",        "🔄 Refresh"],
         ["shop_search"]  = ["Пошук:",             "Поиск:",             "Search:"],
+        ["shop_compose"] = ["📝 Сформувати список", "📝 Сформировать список", "📝 Compose list"],
         ["shop_col_product"] = ["Товар",          "Товар",              "Item"],
         ["shop_send_title"]  = ["Відправити на телефон", "Отправить на телефон", "Send to phone"],
         ["shop_open_phone"]  = ["📱  Відкрити на телефоні", "📱  Открыть на телефоне", "📱  Open on phone"],

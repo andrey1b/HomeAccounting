@@ -201,6 +201,7 @@ public partial class MainWindow : Window
         BtnShopNone.Content  = AppLoc.T("shop_none");
         BtnShopRefresh.Content = AppLoc.T("shop_refresh");
         TbShopSearchLbl.Text = AppLoc.T("shop_search");
+        BtnShopCompose.Content = AppLoc.T("shop_compose");
         ColShopName.Header   = AppLoc.T("shop_col_product");
         ColShopCat.Header    = AppLoc.T("col_category");
         ColShopQty.Header    = AppLoc.T("col_qty");
@@ -488,12 +489,43 @@ public partial class MainWindow : Window
     }
 
     // ─── Список покупок ──────────────────────────────────────────────────────
+    private System.ComponentModel.ICollectionView? _shopView;
+    private bool _composed;
+
     private void PopulateShop()
     {
         _shopItems = ShoppingService.GetItems();
         DgShop.ItemsSource = _shopItems;
+        _shopView = System.Windows.Data.CollectionViewSource.GetDefaultView(DgShop.ItemsSource);
+        _composed = false;
         _shopLoaded = true;
         TbShopHint.Text = AppLoc.T("shop_count", "count", _shopItems.Count.ToString());
+    }
+
+    // «Сформировать список»: показываем только отмеченные товары
+    private void BtnShopCompose_Click(object sender, RoutedEventArgs e)
+    {
+        DgShop.CommitEdit(DataGridEditingUnit.Row, true);
+        if (!_shopItems.Any(i => i.Include))
+        {
+            MessageBox.Show(AppLoc.T("shop_empty"), AppLoc.T("tab_shopping"),
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+        if (_shopView != null)
+        {
+            _shopView.Filter = o => o is ShopItem s && s.Include;
+            _shopView.Refresh();
+        }
+        _composed = true;
+    }
+
+    // Клик в поле поиска расформировывает список (показываем все товары снова)
+    private void ShopSearch_GotFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+    {
+        if (!_composed) return;
+        if (_shopView != null) { _shopView.Filter = null; _shopView.Refresh(); }
+        _composed = false;
     }
 
     // Поиск прокручивает список к первому совпавшему товару (остальные не скрываются)
