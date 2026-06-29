@@ -1,5 +1,8 @@
 namespace HomeAccounting.Models;
 
+/// <summary>Строка с датой — для подсветки записей за сегодня в таблицах.</summary>
+public interface IDatedRow { DateTime Date { get; } }
+
 public class Expense
 {
     public int Id { get; set; }
@@ -18,7 +21,7 @@ public class Expense
 }
 
 // Для отображения в DataGrid (с именами через JOIN)
-public class ExpenseRow
+public class ExpenseRow : IDatedRow
 {
     public int Id { get; set; }
     public DateTime Date { get; set; }

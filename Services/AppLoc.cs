@@ -143,6 +143,8 @@ public static class AppLoc
         ["lbl_qty"]            = ["Кількість:",        "Количество:",       "Quantity:"],
         ["lbl_amount"]         = ["Сума:",             "Сумма:",            "Amount:"],
         ["lbl_discount"]       = ["Знижка %:",         "Скидка %:",         "Discount %:"],
+        ["calc_title"]         = ["Калькулятор",       "Калькулятор",       "Calculator"],
+        ["calc_error"]         = ["Невірний вираз.",   "Неверное выражение.","Invalid expression."],
 
         // CategoryManagerWindow
         ["dlg_cats_expense_title"] = ["Категорії витрат",  "Категории расходов", "Expense categories"],

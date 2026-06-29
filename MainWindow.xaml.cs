@@ -597,12 +597,19 @@ public partial class MainWindow : Window
     private static System.Windows.Media.Brush RowSelBrush => ThemeService.RowSel;
     private static System.Windows.Media.Brush RowAltBrush => ThemeService.RowAlt;
 
+    // Базовый фон строки: записи за сегодня подсвечиваются отдельным цветом
+    private static System.Windows.Media.Brush BaseBrush(object? item, int index)
+    {
+        if (item is IDatedRow d && d.Date.Date == DateTime.Today) return ThemeService.RowToday;
+        return index % 2 == 1 ? RowAltBrush : System.Windows.Media.Brushes.White;
+    }
+
     private static void HighlightRows(DataGrid dg, SelectionChangedEventArgs e)
     {
         foreach (var item in e.RemovedItems)
         {
             if (dg.ItemContainerGenerator.ContainerFromItem(item) is DataGridRow row)
-                row.Background = dg.Items.IndexOf(item) % 2 == 1 ? RowAltBrush : System.Windows.Media.Brushes.White;
+                row.Background = BaseBrush(item, dg.Items.IndexOf(item));
         }
         foreach (var item in e.AddedItems)
         {
@@ -613,7 +620,7 @@ public partial class MainWindow : Window
 
     private static void HighlightRow(DataGrid dg, DataGridRow row)
     {
-        if (row.IsSelected) row.Background = RowSelBrush;
+        row.Background = row.IsSelected ? RowSelBrush : BaseBrush(row.Item, row.GetIndex());
     }
 
     private void DgAccounts_SelectionChanged(object sender, SelectionChangedEventArgs e)

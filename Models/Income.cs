@@ -13,7 +13,7 @@ public class Income
     public string Note { get; set; } = "";
 }
 
-public class IncomeRow
+public class IncomeRow : IDatedRow
 {
     public int Id { get; set; }
     public DateTime Date { get; set; }

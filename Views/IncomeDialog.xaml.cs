@@ -8,6 +8,12 @@ public partial class IncomeDialog : Window
     public Income Result { get; private set; } = new();
     public bool OpenAnother { get; private set; }
 
+    private void BtnCalc_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new CalculatorWindow(TbAmount.Text) { Owner = this };
+        if (dlg.ShowDialog() == true) TbAmount.Text = dlg.ResultText;
+    }
+
     public IncomeDialog(Income? existing = null)
     {
         InitializeComponent();

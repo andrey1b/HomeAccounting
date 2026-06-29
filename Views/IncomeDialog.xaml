@@ -50,7 +50,15 @@
             <ComboBox                             Grid.Row="3" Grid.Column="1" x:Name="CbSubcategory" DisplayMemberPath="Name" Margin="0,0,0,8"/>
 
             <TextBlock x:Name="TbLblAmount"      Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,8"/>
-            <TextBox                              Grid.Row="4" Grid.Column="1" x:Name="TbAmount" Margin="0,0,0,8" Padding="6,4"/>
+            <Grid                                 Grid.Row="4" Grid.Column="1" Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="TbAmount" Padding="6,4"/>
+                <Button  Grid.Column="1" Content="🧮" Width="40" Margin="6,0,0,0" Padding="0"
+                         ToolTip="Калькулятор" Click="BtnCalc_Click"/>
+            </Grid>
 
             <TextBlock x:Name="TbLblQty"         Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,8"/>
             <Grid                                 Grid.Row="5" Grid.Column="1" Margin="0,0,0,8">
