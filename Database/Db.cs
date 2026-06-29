@@ -242,6 +242,14 @@ public static class Db
                 note          TEXT    NOT NULL DEFAULT ''
             );
 
+            CREATE TABLE IF NOT EXISTS shopping_marks (
+                user_id  INTEGER NOT NULL,
+                name     TEXT    NOT NULL,
+                category TEXT    NOT NULL DEFAULT '',
+                qty      TEXT    NOT NULL DEFAULT '1',
+                PRIMARY KEY(user_id, name, category)
+            );
+
             CREATE TABLE IF NOT EXISTS deposits (
                 id            INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id       INTEGER NOT NULL DEFAULT 1,

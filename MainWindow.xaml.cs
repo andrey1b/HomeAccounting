@@ -126,6 +126,10 @@ public partial class MainWindow : Window
             s.WindowHeight = Height;
         }
         s.Save();
+
+        // Сохраняем отметки списка покупок
+        if (_shopLoaded)
+            try { ShoppingService.SaveMarks(_shopItems); } catch { }
     }
 
     // ─── Phone QR panel ──────────────────────────────────────────────────────
@@ -551,6 +555,18 @@ public partial class MainWindow : Window
 
     private void BtnShopRefresh_Click(object sender, RoutedEventArgs e)
     { if (TbShopSearch != null) TbShopSearch.Text = ""; PopulateShop(); }
+
+    // Клик по ячейке количества открывает калькулятор
+    private void ShopQty_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.DataContext is ShopItem s)
+        {
+            var dlg = new Views.CalculatorWindow(s.Qty) { Owner = this };
+            if (dlg.ShowDialog() == true && !string.IsNullOrWhiteSpace(dlg.ResultText))
+                s.Qty = dlg.ResultText;
+            e.Handled = true;
+        }
+    }
 
     private void BtnShopPhone_Click(object sender, RoutedEventArgs e)
     {

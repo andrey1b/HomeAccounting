@@ -619,6 +619,11 @@
                                       RowHeaderWidth="0" HeadersVisibility="Column" GridLinesVisibility="Horizontal">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn x:Name="ColShopChk" Width="44">
+                                        <DataGridTemplateColumn.Header>
+                                            <Button Content="✕" FontWeight="Bold" Foreground="White"
+                                                    Background="Transparent" BorderThickness="0" Padding="0"
+                                                    Cursor="Hand" Click="BtnShopNone_Click" ToolTip="Снять все метки"/>
+                                        </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <CheckBox IsChecked="{Binding Include, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -628,7 +633,16 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTextColumn     x:Name="ColShopName" Binding="{Binding Name}"     Width="*"   IsReadOnly="True"/>
                                     <DataGridTextColumn     x:Name="ColShopCat"  Binding="{Binding Category}" Width="170" IsReadOnly="True"/>
-                                    <DataGridTextColumn     x:Name="ColShopQty"  Binding="{Binding Qty, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
+                                    <DataGridTemplateColumn x:Name="ColShopQty"  Width="90">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Qty}" Background="Transparent" Padding="6,3"
+                                                           TextAlignment="Center" Cursor="Hand"
+                                                           ToolTip="Клик — калькулятор количества"
+                                                           MouseLeftButtonUp="ShopQty_Click"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
                                     <DataGridTextColumn     x:Name="ColShopUnit" Binding="{Binding Unit}"     Width="70"  IsReadOnly="True"/>
                                 </DataGrid.Columns>
                             </DataGrid>

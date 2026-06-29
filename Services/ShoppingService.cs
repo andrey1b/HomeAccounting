@@ -32,7 +32,34 @@ public static class ShoppingService
             FROM subs s
             LEFT JOIN uc ON uc.sid = s.id AND uc.rn = 1
             ORDER BY s.cname, s.sname";
-        return conn.Query<ShopItem>(sql, new { uid = Session.UserId }).ToList();
+        var list = conn.Query<ShopItem>(sql, new { uid = Session.UserId }).ToList();
+
+        // восстанавливаем сохранённые метки и количество
+        var marks = conn.Query("SELECT name, category, qty FROM shopping_marks WHERE user_id=@uid",
+                               new { uid = Session.UserId })
+            .ToDictionary(r => Key((string)r.name, (string)r.category), r => (string)r.qty);
+        foreach (var it in list)
+            if (marks.TryGetValue(Key(it.Name, it.Category), out var q))
+            {
+                it.Include = true;
+                if (!string.IsNullOrWhiteSpace(q)) it.Qty = q;
+            }
+        return list;
+    }
+
+    private static string Key(string name, string category) => $"{name}{category}";
+
+    /// <summary>Сохраняет отмеченные товары (название, категория, количество) для текущего пользователя.</summary>
+    public static void SaveMarks(IEnumerable<ShopItem> items)
+    {
+        using var conn = Db.Open();
+        using var tr = conn.BeginTransaction();
+        conn.Execute("DELETE FROM shopping_marks WHERE user_id=@uid", new { uid = Session.UserId }, tr);
+        foreach (var it in items.Where(i => i.Include))
+            conn.Execute(
+                "INSERT OR REPLACE INTO shopping_marks(user_id,name,category,qty) VALUES(@uid,@n,@c,@q)",
+                new { uid = Session.UserId, n = it.Name, c = it.Category, q = it.Qty }, tr);
+        tr.Commit();
     }
 
     /// <summary>HTML-страница списка покупок для телефона (с отметками «куплено» и сохранением).</summary>
