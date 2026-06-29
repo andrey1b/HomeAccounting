@@ -594,6 +594,54 @@
                 </Border>
             </TabItem>
 
+            <!-- ===== SHOPPING LIST TAB ===== -->
+            <TabItem x:Name="TabShopping">
+                <Border Background="{DynamicResource HA.Panel.Bg}" TextElement.Foreground="{DynamicResource HA.Panel.Text}" Padding="8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="290"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Список товаров -->
+                        <DockPanel Grid.Column="0" Margin="0,0,8,0">
+                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,6">
+                                <Button x:Name="BtnShopAll"     Width="130" Click="BtnShopAll_Click"/>
+                                <Button x:Name="BtnShopNone"    Width="120" Click="BtnShopNone_Click"/>
+                                <Button x:Name="BtnShopRefresh" Width="130" Click="BtnShopRefresh_Click"/>
+                            </StackPanel>
+                            <TextBlock x:Name="TbShopHint" DockPanel.Dock="Bottom" FontSize="11"
+                                       Margin="2,6,0,0" TextWrapping="Wrap"/>
+                            <DataGrid x:Name="DgShop" AutoGenerateColumns="False" CanUserAddRows="False"
+                                      RowHeaderWidth="0" HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+                                <DataGrid.Columns>
+                                    <DataGridCheckBoxColumn x:Name="ColShopChk"  Binding="{Binding Include, UpdateSourceTrigger=PropertyChanged}" Width="44"/>
+                                    <DataGridTextColumn     x:Name="ColShopName" Binding="{Binding Name}"     Width="*"   IsReadOnly="True"/>
+                                    <DataGridTextColumn     x:Name="ColShopCat"  Binding="{Binding Category}" Width="170" IsReadOnly="True"/>
+                                    <DataGridTextColumn     x:Name="ColShopQty"  Binding="{Binding Qty, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
+                                    <DataGridTextColumn     x:Name="ColShopUnit" Binding="{Binding Unit}"     Width="70"  IsReadOnly="True"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+
+                        <!-- Отправка на телефон -->
+                        <Border Grid.Column="1" Background="{DynamicResource HA.Panel.Bg}"
+                                BorderBrush="#c5e0c5" BorderThickness="1" CornerRadius="4" Padding="12">
+                            <StackPanel>
+                                <TextBlock x:Name="TbShopSendTitle" FontWeight="Bold" FontSize="14" Margin="0,0,0,12"/>
+                                <Button x:Name="BtnShopPhone" Height="46" Margin="0,0,0,12" Click="BtnShopPhone_Click"/>
+                                <TextBlock x:Name="TbShopScanHint" TextWrapping="Wrap" Margin="0,0,0,8"
+                                           Visibility="Collapsed"/>
+                                <Image x:Name="ImgShopQr" Width="210" Height="210" HorizontalAlignment="Center"
+                                       RenderOptions.BitmapScalingMode="NearestNeighbor" Visibility="Collapsed"/>
+                                <TextBlock x:Name="TbShopUrl" TextAlignment="Center" FontWeight="Bold"
+                                           Margin="0,8,0,0" Visibility="Collapsed"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+            </TabItem>
+
         </TabControl>
     </DockPanel>
 </Window>

@@ -21,6 +21,8 @@ public partial class MainWindow : Window
 
     private List<ExpenseRow> _expenseRows = new();
     private List<IncomeRow>  _incomeRows  = new();
+    private List<ShopItem>   _shopItems   = new();
+    private bool _shopLoaded;
     private float _tableFontSize = 9f;
     private bool _receiptAccLoading;
 
@@ -193,6 +195,18 @@ public partial class MainWindow : Window
         TabAccounts.Header = AppLoc.T("tab_accounts");
         TabExpenses.Header = AppLoc.T("tab_expenses");
         TabIncomes.Header  = AppLoc.T("tab_incomes");
+
+        TabShopping.Header   = AppLoc.T("tab_shopping");
+        BtnShopAll.Content   = AppLoc.T("shop_all");
+        BtnShopNone.Content  = AppLoc.T("shop_none");
+        BtnShopRefresh.Content = AppLoc.T("shop_refresh");
+        ColShopName.Header   = AppLoc.T("shop_col_product");
+        ColShopCat.Header    = AppLoc.T("col_category");
+        ColShopQty.Header    = AppLoc.T("col_qty");
+        ColShopUnit.Header   = AppLoc.T("col_unit");
+        TbShopSendTitle.Text = AppLoc.T("shop_send_title");
+        BtnShopPhone.Content = AppLoc.T("shop_open_phone");
+        TbShopScanHint.Text  = AppLoc.T("shop_scan_hint");
 
         TabAccBrief.Header     = AppLoc.T("tab_acc_brief");
         TabAccDetailed.Header  = AppLoc.T("tab_acc_detailed");
@@ -469,6 +483,55 @@ public partial class MainWindow : Window
         if (!_filtersReady) return;
         if (MainTabs.SelectedIndex == 1) RefreshExpenses();
         else if (MainTabs.SelectedIndex == 2) RefreshIncomes();
+        else if (MainTabs.SelectedIndex == 3 && !_shopLoaded) PopulateShop();
+    }
+
+    // ─── Список покупок ──────────────────────────────────────────────────────
+    private void PopulateShop()
+    {
+        _shopItems = ShoppingService.GetItems();
+        DgShop.ItemsSource = _shopItems;
+        _shopLoaded = true;
+        TbShopHint.Text = AppLoc.T("shop_count", "count", _shopItems.Count.ToString());
+    }
+
+    private void BtnShopAll_Click(object sender, RoutedEventArgs e)
+    { foreach (var it in _shopItems) it.Include = true;  DgShop.Items.Refresh(); }
+
+    private void BtnShopNone_Click(object sender, RoutedEventArgs e)
+    { foreach (var it in _shopItems) it.Include = false; DgShop.Items.Refresh(); }
+
+    private void BtnShopRefresh_Click(object sender, RoutedEventArgs e) => PopulateShop();
+
+    private void BtnShopPhone_Click(object sender, RoutedEventArgs e)
+    {
+        DgShop.CommitEdit(DataGridEditingUnit.Row, true);   // зафиксировать правки количества
+        var chosen = _shopItems.Where(i => i.Include).ToList();
+        if (chosen.Count == 0)
+        {
+            MessageBox.Show(AppLoc.T("shop_empty"), AppLoc.T("tab_shopping"),
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+        ReceiptHttpReceiver.ShoppingHtml = ShoppingService.BuildHtml(chosen);
+        var url = $"http://{ReceiptHttpReceiver.LocalIp}:{ReceiptHttpReceiver.Port}/shop";
+        ImgShopQr.Source = MakeQr(url);
+        TbShopUrl.Text = url.Replace("http://", "");
+        TbShopScanHint.Visibility = ImgShopQr.Visibility = TbShopUrl.Visibility = Visibility.Visible;
+    }
+
+    private static BitmapImage MakeQr(string url)
+    {
+        using var gen = new QRCodeGenerator();
+        var data  = gen.CreateQrCode(url, QRCodeGenerator.ECCLevel.M);
+        var bytes = new PngByteQRCode(data).GetGraphic(6);
+        var bmp = new BitmapImage();
+        bmp.BeginInit();
+        bmp.StreamSource = new System.IO.MemoryStream(bytes);
+        bmp.CacheOption  = BitmapCacheOption.OnLoad;
+        bmp.EndInit();
+        bmp.Freeze();
+        return bmp;
     }
 
     private void AccSubTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)

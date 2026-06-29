@@ -27,6 +27,9 @@ public static class ReceiptHttpReceiver
 
     public static string LocalIp { get; private set; } = "127.0.0.1";
 
+    /// <summary>HTML списка покупок, отдаётся по GET /shop (готовится вкладкой «Список покупок»).</summary>
+    public static string? ShoppingHtml { get; set; }
+
     public static void Start(Dispatcher ui, Action<byte[]> onXml, Action<ImportResult> onQr)
     {
         _ui    = ui;
@@ -203,6 +206,16 @@ public static class ReceiptHttpReceiver
         if (method == "GET" && path == "/web")
         {
             await SendAsync(stream, 200, "text/html; charset=utf-8", Encoding.UTF8.GetBytes(BuildWebHtml()));
+            return;
+        }
+
+        // GET /shop  — список покупок для телефона
+        if (method == "GET" && path == "/shop")
+        {
+            var html = ShoppingHtml ??
+                "<html><meta charset=utf-8><body style='font-family:sans-serif;text-align:center;padding:40px;color:#2C5F2D'>" +
+                "Список покупок пуст.<br>Откройте вкладку «Список покупок» в программе и нажмите «Открыть на телефоне».</body></html>";
+            await SendAsync(stream, 200, "text/html; charset=utf-8", Encoding.UTF8.GetBytes(html));
             return;
         }
 
