@@ -244,6 +244,7 @@ public static class AppLoc
         // Receipt import
         ["msg_receipt_imported"] = ["Імпортовано {count} позицій з чека.", "Импортировано {count} позиций из чека.", "Imported {count} items from receipt."],
         ["msg_no_updates"]       = ["Програма актуальна. Оновлень немає.", "Программа актуальна. Обновлений нет.", "Program is up to date."],
+        ["msg_update_error"]     = ["Не вдалося перевірити оновлення (немає зв'язку).", "Не удалось проверить обновления (нет связи).", "Could not check for updates (no connection)."],
         ["msg_receipt_error"]    = ["Помилка читання чека.",               "Ошибка чтения чека.",                   "Error reading receipt."],
         ["msg_receipt_no_items"] = ["У чеку не знайдено товарів.",         "В чеке не найдено товаров.",            "No items found in receipt."],
         ["receipt_dup_confirm"]  = ["Чек №{no} від {date} вже вносився.\nВнести ще раз?", "Чек №{no} от {date} уже вносился.\nВнести ещё раз?", "Receipt #{no} dated {date} was already imported.\nImport again?"],

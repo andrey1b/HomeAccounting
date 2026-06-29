@@ -57,7 +57,7 @@ public partial class App : Application
         splash.Close();
 
         // Проверка обновлений в фоне (не блокирует запуск)
-        Services.UpdateChecker.CheckAsync(tag =>
+        Services.UpdateChecker.CheckAsync((tag, _) =>
             Dispatcher.Invoke(() =>
             {
                 if (tag != null && MainWindow is MainWindow mw)

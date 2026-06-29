@@ -1368,12 +1368,15 @@ public partial class MainWindow : Window
     private void MiCheckUpdate_Click(object sender, RoutedEventArgs e)
     {
         MiCheckUpdate.IsEnabled = false;
-        Services.UpdateChecker.CheckAsync(tag =>
+        Services.UpdateChecker.CheckAsync((tag, err) =>
             Dispatcher.Invoke(() =>
             {
                 MiCheckUpdate.IsEnabled = true;
                 if (tag != null)
                     ShowUpdateBanner(tag);
+                else if (err)
+                    MessageBox.Show(AppLoc.T("msg_update_error"), "HomeAccounting",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 else
                     MessageBox.Show(AppLoc.T("msg_no_updates"), "HomeAccounting",
                         MessageBoxButton.OK, MessageBoxImage.Information);
