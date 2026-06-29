@@ -99,7 +99,7 @@
         <!-- QR-коды: Android + iPhone -->
         <Border DockPanel.Dock="Right" Width="158"
                 BorderBrush="#c5e0c5" BorderThickness="1,0,0,0"
-                Background="#f0faf0" Padding="10,14,10,10">
+                Background="{DynamicResource HA.Panel.Bg}" Padding="10,14,10,10">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel HorizontalAlignment="Center">
 
@@ -114,9 +114,9 @@
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            Cursor="Hand" ToolTip="Нажмите для подробной инструкции"
                            MouseDown="ImgPhoneQr_MouseDown"/>
-                    <TextBlock x:Name="TbPhoneQrUrl" FontSize="8" Foreground="#888"
+                    <TextBlock x:Name="TbPhoneQrUrl" FontSize="8" Foreground="#5b6b5b"
                                TextWrapping="Wrap" TextAlignment="Center" Margin="0,4,0,0"/>
-                    <TextBlock Text="(нажмите для инструкции)" FontSize="7.5" Foreground="#bbb"
+                    <TextBlock Text="(нажмите для инструкции)" FontSize="7.5" Foreground="#7e8c7e"
                                TextAlignment="Center" Margin="0,2,0,0"/>
 
                     <!-- ── Разделитель ── -->
@@ -132,9 +132,9 @@
                     <Image x:Name="ImgIphoneQr" Width="128" Height="128"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            ToolTip="Откройте в браузере Safari на iPhone"/>
-                    <TextBlock x:Name="TbIphoneQrUrl" FontSize="8" Foreground="#888"
+                    <TextBlock x:Name="TbIphoneQrUrl" FontSize="8" Foreground="#5b6b5b"
                                TextWrapping="Wrap" TextAlignment="Center" Margin="0,4,0,0"/>
-                    <TextBlock Text="(веб-форма для отправки чека)" FontSize="7.5" Foreground="#bbb"
+                    <TextBlock Text="(веб-форма для отправки чека)" FontSize="7.5" Foreground="#7e8c7e"
                                TextAlignment="Center" Margin="0,2,0,0"/>
 
                     <!-- ── Разделитель ── -->
@@ -356,7 +356,7 @@
 
             <!-- ===== EXPENSES TAB ===== -->
             <TabItem x:Name="TabExpenses">
-                <Border Background="#dde3ec" Padding="8">
+                <Border Background="{DynamicResource HA.Panel.Bg}" TextElement.Foreground="{DynamicResource HA.Panel.Text}" Padding="8">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>     <!-- таблица -->
@@ -474,7 +474,7 @@
 
             <!-- ===== INCOMES TAB ===== -->
             <TabItem x:Name="TabIncomes">
-                <Border Background="#dde3ec" Padding="8">
+                <Border Background="{DynamicResource HA.Panel.Bg}" TextElement.Foreground="{DynamicResource HA.Panel.Text}" Padding="8">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>     <!-- таблица -->

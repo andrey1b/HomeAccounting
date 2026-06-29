@@ -12,7 +12,8 @@ public static class ThemeService
     private record Palette(
         string Alt, string Sel, string SelText, string HeaderBg, string HeaderText,
         string BtnBg, string BtnFg, string BtnHover, string BtnPress, string BtnBorder, string MenuBg,
-        string TabSelBg, string TabSelText, string TabBg, string TabText, string Accent);
+        string TabSelBg, string TabSelText, string TabBg, string TabText, string Accent,
+        string PanelBg, string PanelText);
 
     private static readonly Dictionary<string, Palette> Palettes = new()
     {
@@ -20,12 +21,14 @@ public static class ThemeService
             Alt: "#F0F0F0", Sel: "#CCE5FF", SelText: "#000000", HeaderBg: "#F3F3F3", HeaderText: "#000000",
             BtnBg: "#E1E1E1", BtnFg: "#000000", BtnHover: "#EAEAEA", BtnPress: "#CFCFCF",
             BtnBorder: "#ADADAD", MenuBg: "#F0F0F0",
-            TabSelBg: "#FFFFFF", TabSelText: "#000000", TabBg: "#ECECEC", TabText: "#000000", Accent: "#1565C0"),
+            TabSelBg: "#FFFFFF", TabSelText: "#000000", TabBg: "#ECECEC", TabText: "#000000", Accent: "#1565C0",
+            PanelBg: "#ECECEC", PanelText: "#000000"),
         ["Garden"] = new(
             Alt: "#EAF3E6", Sel: "#CFE3CF", SelText: "#1B5E20", HeaderBg: "#2E7D32", HeaderText: "#FFFFFF",
             BtnBg: "#2E7D32", BtnFg: "#FFFFFF", BtnHover: "#388E3C", BtnPress: "#1B5E20",
             BtnBorder: "#2E7D32", MenuBg: "#DCEFD6",
-            TabSelBg: "#2E7D32", TabSelText: "#FFFFFF", TabBg: "#DCEFD6", TabText: "#1B5E20", Accent: "#2E7D32"),
+            TabSelBg: "#2E7D32", TabSelText: "#FFFFFF", TabBg: "#DCEFD6", TabText: "#1B5E20", Accent: "#2E7D32",
+            PanelBg: "#EAF3E6", PanelText: "#1B5E20"),
     };
 
     public static IEnumerable<string> Names => Palettes.Keys;
@@ -63,6 +66,8 @@ public static class ThemeService
         r["HA.Tab.Bg"]       = B(p.TabBg);
         r["HA.Tab.Text"]     = B(p.TabText);
         r["HA.Accent"]       = B(p.Accent);
+        r["HA.Panel.Bg"]     = B(p.PanelBg);
+        r["HA.Panel.Text"]   = B(p.PanelText);
 
         // системное выделение (для ячеек DataGrid и пр.)
         r[SystemColors.HighlightBrushKey]                      = B(p.Sel);
