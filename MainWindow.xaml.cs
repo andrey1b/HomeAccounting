@@ -488,37 +488,34 @@ public partial class MainWindow : Window
     }
 
     // ─── Список покупок ──────────────────────────────────────────────────────
-    private System.ComponentModel.ICollectionView? _shopView;
-
     private void PopulateShop()
     {
         _shopItems = ShoppingService.GetItems();
         DgShop.ItemsSource = _shopItems;
-        _shopView = System.Windows.Data.CollectionViewSource.GetDefaultView(DgShop.ItemsSource);
-        _shopView.Filter = ShopFilter;
         _shopLoaded = true;
         TbShopHint.Text = AppLoc.T("shop_count", "count", _shopItems.Count.ToString());
     }
 
-    private bool ShopFilter(object o)
+    // Поиск прокручивает список к первому совпавшему товару (остальные не скрываются)
+    private void ShopSearch_TextChanged(object sender, TextChangedEventArgs e)
     {
-        var q = TbShopSearch?.Text?.Trim();
-        if (string.IsNullOrEmpty(q)) return true;
-        return o is not ShopItem s
-            || s.Name.Contains(q, StringComparison.OrdinalIgnoreCase)
-            || s.Category.Contains(q, StringComparison.OrdinalIgnoreCase);
+        var q = TbShopSearch.Text?.Trim();
+        if (string.IsNullOrEmpty(q)) return;
+        var item = _shopItems.FirstOrDefault(s => s.Name.StartsWith(q, StringComparison.OrdinalIgnoreCase))
+                ?? _shopItems.FirstOrDefault(s => s.Name.Contains(q, StringComparison.OrdinalIgnoreCase))
+                ?? _shopItems.FirstOrDefault(s => s.Category.Contains(q, StringComparison.OrdinalIgnoreCase));
+        if (item != null)
+        {
+            DgShop.SelectedItem = item;
+            DgShop.ScrollIntoView(item);
+        }
     }
 
-    private void ShopSearch_TextChanged(object sender, TextChangedEventArgs e) => _shopView?.Refresh();
-
-    private IEnumerable<ShopItem> VisibleShopItems() =>
-        _shopView?.Cast<ShopItem>().ToList() ?? _shopItems;
-
     private void BtnShopAll_Click(object sender, RoutedEventArgs e)
-    { foreach (var it in VisibleShopItems()) it.Include = true;  DgShop.Items.Refresh(); }
+    { foreach (var it in _shopItems) it.Include = true;  DgShop.Items.Refresh(); }
 
     private void BtnShopNone_Click(object sender, RoutedEventArgs e)
-    { foreach (var it in VisibleShopItems()) it.Include = false; DgShop.Items.Refresh(); }
+    { foreach (var it in _shopItems) it.Include = false; DgShop.Items.Refresh(); }
 
     private void BtnShopRefresh_Click(object sender, RoutedEventArgs e)
     { if (TbShopSearch != null) TbShopSearch.Text = ""; PopulateShop(); }
