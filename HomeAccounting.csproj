@@ -3,24 +3,18 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>HomeAccounting</RootNamespace>
-    <AssemblyName>HomeAccounting_v4.4.6</AssemblyName>
+    <AssemblyName>HomeAccounting_v4.4.7</AssemblyName>
     <StartupObject>HomeAccounting.App</StartupObject>
-    <Version>4.4.6</Version>
-    <FileVersion>4.4.6.0</FileVersion>
+    <Version>4.4.7</Version>
+    <FileVersion>4.4.7.0</FileVersion>
     <Copyright>Офис пенсионера</Copyright>
     <ApplicationIcon>Resources\app.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
   </PropertyGroup>
-  <!-- WinForms ImplicitUsings конфликтуют с WPF типами — убираем их -->
-  <ItemGroup>
-    <Using Remove="System.Windows.Forms"/>
-    <Using Remove="System.Drawing"/>
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
     <PackageReference Include="Dapper" Version="2.1.35" />

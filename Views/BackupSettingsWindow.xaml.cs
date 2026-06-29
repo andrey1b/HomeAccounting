@@ -24,11 +24,11 @@ public partial class BackupSettingsWindow : Window
 
     private void BtnBrowse_Click(object sender, RoutedEventArgs e)
     {
-        using var dlg = new System.Windows.Forms.FolderBrowserDialog();
+        var dlg = new Microsoft.Win32.OpenFolderDialog();
         if (!string.IsNullOrWhiteSpace(TbFolder.Text) && Directory.Exists(TbFolder.Text))
-            dlg.SelectedPath = TbFolder.Text;
-        if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            TbFolder.Text = dlg.SelectedPath;
+            dlg.InitialDirectory = TbFolder.Text;
+        if (dlg.ShowDialog() == true)
+            TbFolder.Text = dlg.FolderName;
     }
 
     private int Keep()
