@@ -145,6 +145,10 @@ public static class AppLoc
         ["lbl_discount"]       = ["Знижка %:",         "Скидка %:",         "Discount %:"],
         ["calc_title"]         = ["Калькулятор",       "Калькулятор",       "Calculator"],
         ["calc_error"]         = ["Невірний вираз.",   "Неверное выражение.","Invalid expression."],
+        ["btn_close"]          = ["Закрити",           "Закрыть",           "Close"],
+        ["menu_calc"]          = ["Калькулятор",       "Калькулятор",       "Calculator"],
+        ["calc_homeb"]         = ["Калькулятор «Домашнього бюджету»", "Калькулятор «Домашнего бюджета»", "Home Budget calculator"],
+        ["calc_windows"]       = ["Калькулятор Windows", "Калькулятор Windows", "Windows Calculator"],
 
         // CategoryManagerWindow
         ["dlg_cats_expense_title"] = ["Категорії витрат",  "Категории расходов", "Expense categories"],

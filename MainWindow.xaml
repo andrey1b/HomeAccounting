@@ -52,6 +52,10 @@
                 <MenuItem x:Name="MiDeposits" Click="MiDeposits_Click"/>
             </MenuItem>
             <MenuItem x:Name="MiReports" Click="MenuReports_Click"/>
+            <MenuItem x:Name="MiCalc">
+                <MenuItem x:Name="MiCalcHomeB"   Click="MiCalcHomeB_Click"/>
+                <MenuItem x:Name="MiCalcWindows" Click="MiCalcWindows_Click"/>
+            </MenuItem>
             <MenuItem x:Name="MiMaint">
                 <MenuItem x:Name="MiOpenFolder"   Click="MiOpenFolder_Click"/>
                 <MenuItem x:Name="MiOpenSite"     Click="MiOpenSite_Click"/>

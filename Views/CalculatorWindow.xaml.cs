@@ -11,12 +11,16 @@ public partial class CalculatorWindow : Window
     /// <summary>Итоговое значение (в инвариантном формате с точкой).</summary>
     public string ResultText { get; private set; } = "";
 
-    public CalculatorWindow(string? initial = null)
+    private readonly bool _standalone;
+
+    public CalculatorWindow(string? initial = null, bool standalone = false)
     {
         InitializeComponent();
+        _standalone = standalone;
         Title = AppLoc.T("calc_title");
-        BtnOk.Content     = AppLoc.T("btn_ok");
+        BtnOk.Content     = standalone ? AppLoc.T("btn_close") : AppLoc.T("btn_ok");
         BtnCancel.Content = AppLoc.T("btn_cancel");
+        if (standalone) BtnCancel.Visibility = Visibility.Collapsed;
 
         if (!string.IsNullOrWhiteSpace(initial) && initial.Trim() != "0")
             TbDisplay.Text = initial.Trim().Replace(',', '.');
@@ -50,6 +54,7 @@ public partial class CalculatorWindow : Window
 
     private void Ok_Click(object sender, RoutedEventArgs e)
     {
+        if (_standalone) { Close(); return; }
         if (string.IsNullOrWhiteSpace(TbDisplay.Text)) { ResultText = "0"; DialogResult = true; return; }
         if (TryEval(TbDisplay.Text, out var v))
         {

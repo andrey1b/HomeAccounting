@@ -230,6 +230,9 @@ public partial class MainWindow : Window
         MiSwitchUser.Header  = AppLoc.T("user_switch");
         MiManageUsers.Header = AppLoc.T("user_manage");
         MiReports.Header  = AppLoc.T("menu_reports");
+        MiCalc.Header        = AppLoc.T("menu_calc");
+        MiCalcHomeB.Header   = AppLoc.T("calc_homeb");
+        MiCalcWindows.Header = AppLoc.T("calc_windows");
         MiMaint.Header        = AppLoc.T("menu_maint");
         MiOpenFolder.Header   = AppLoc.T("mi_open_folder");
         MiOpenSite.Header     = AppLoc.T("mi_open_site");
@@ -1179,6 +1182,15 @@ public partial class MainWindow : Window
 
     private void MenuReports_Click(object sender, RoutedEventArgs e) =>
         new ReportsWindow { Owner = this }.ShowDialog();
+
+    private void MiCalcHomeB_Click(object sender, RoutedEventArgs e) =>
+        new Views.CalculatorWindow(standalone: true) { Owner = this }.Show();
+
+    private void MiCalcWindows_Click(object sender, RoutedEventArgs e)
+    {
+        try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("calc.exe") { UseShellExecute = true }); }
+        catch (Exception ex) { MessageBox.Show(ex.Message, AppLoc.T("menu_calc"), MessageBoxButton.OK, MessageBoxImage.Warning); }
+    }
 
     // ─── Новые разделы (Учёт / Справочники) ──────────────────────────────────
     private void MiBudgets_Click(object sender, RoutedEventArgs e) =>
