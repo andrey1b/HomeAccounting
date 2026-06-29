@@ -19,9 +19,47 @@
         <Style x:Key="RedCell" TargetType="TextBlock" BasedOn="{StaticResource RightCell}">
             <Setter Property="Foreground" Value="DarkRed"/>
         </Style>
+        <!-- Скруглённые кнопки; цвета берутся из активной темы (Garden/Windows) -->
         <Style TargetType="Button">
-            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="Padding" Value="12,5"/>
             <Setter Property="Margin" Value="0,0,6,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource HA.Button.Fg}"/>
+            <Setter Property="Background" Value="{DynamicResource HA.Button.Bg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HA.Button.Border}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="8"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"
+                                              RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource HA.Button.Hover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource HA.Button.Press}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="bd" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Меню в тон темы -->
+        <Style TargetType="Menu">
+            <Setter Property="Background" Value="{DynamicResource HA.Menu.Bg}"/>
         </Style>
         <Style TargetType="DataGrid">
             <Setter Property="AutoGenerateColumns" Value="False"/>
