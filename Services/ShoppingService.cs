@@ -16,7 +16,8 @@ public static class ShoppingService
                 JOIN categories c ON c.id = sc.category_id
                 WHERE sc.user_id = @uid AND c.type = 'expense'
                   AND (c.name LIKE '%родукт%' OR c.name LIKE '%итани%'
-                    OR c.name LIKE '%озяйствен%' OR c.name LIKE '%озтовар%')
+                    OR c.name LIKE '%озяйствен%' OR c.name LIKE '%озтовар%'
+                    OR c.name LIKE '%птек%')
             ),
             uc AS (
                 SELECT s.id AS sid, u.name AS unit_name,
