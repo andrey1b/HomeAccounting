@@ -618,7 +618,14 @@
                             <DataGrid x:Name="DgShop" AutoGenerateColumns="False" CanUserAddRows="False"
                                       RowHeaderWidth="0" HeadersVisibility="Column" GridLinesVisibility="Horizontal">
                                 <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn x:Name="ColShopChk"  Binding="{Binding Include, UpdateSourceTrigger=PropertyChanged}" Width="44"/>
+                                    <DataGridTemplateColumn x:Name="ColShopChk" Width="44">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding Include, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
                                     <DataGridTextColumn     x:Name="ColShopName" Binding="{Binding Name}"     Width="*"   IsReadOnly="True"/>
                                     <DataGridTextColumn     x:Name="ColShopCat"  Binding="{Binding Category}" Width="170" IsReadOnly="True"/>
                                     <DataGridTextColumn     x:Name="ColShopQty"  Binding="{Binding Qty, UpdateSourceTrigger=PropertyChanged}" Width="80"/>

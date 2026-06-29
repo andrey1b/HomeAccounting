@@ -4,7 +4,7 @@
 #define AppExeName "HomeAccounting.exe"
 ; Версия берётся из build-системы через /DAppVersion=x.y.z
 #ifndef AppVersion
-  #define AppVersion "4.4.2"
+  #define AppVersion "4.4.3"
 #endif
 
 [Setup]
