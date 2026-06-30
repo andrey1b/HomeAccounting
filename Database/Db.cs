@@ -93,7 +93,29 @@ public static class Db
         DeduplicateCategories(conn);
         SeedDefaults(conn);         // справочники для пользователя по умолчанию
 
-        conn.Execute("PRAGMA user_version = 2;");
+        int ver = conn.ExecuteScalar<int>("PRAGMA user_version");
+        if (ver < 3) UpgradeAccountIcons(conn);   // одноразово: наглядные иконки вместо одинаковых 💰
+        conn.Execute("PRAGMA user_version = 3;");
+    }
+
+    // Подбираем выразительную иконку по названию счёта (только там, где осталась дефолтная 💰)
+    private static void UpgradeAccountIcons(SqliteConnection conn)
+    {
+        foreach (var a in conn.Query("SELECT id, name, icon FROM accounts").ToList())
+        {
+            string icon = (string)(a.icon ?? "");
+            if (icon != "💰" && !string.IsNullOrEmpty(icon)) continue;  // выбранную пользователем не трогаем
+            string n = ((string)(a.name ?? "")).ToLowerInvariant();
+            string nw =
+                n.Contains("налич") || n.Contains("готів") || n.Contains("касса") ? "💵" :
+                n.Contains("евро")  || n.Contains("євро")  ? "💶" :
+                n.Contains("долл")  || n.Contains("usd")   ? "💵" :
+                n.Contains("банк") || n.Contains("моно") || n.Contains("приват") || n.Contains("ощад")
+                    || n.Contains("укрсиб") || n.Contains("аваль") || n.Contains("карт") ? "💳" :
+                "💰";
+            if (nw != icon)
+                conn.Execute("UPDATE accounts SET icon=@i WHERE id=@id", new { i = nw, id = (long)a.id });
+        }
     }
 
     // ── Схема (свежая установка) ────────────────────────────────────────────

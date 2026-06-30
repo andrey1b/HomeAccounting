@@ -77,6 +77,13 @@
                 <MenuItem x:Name="MiThemeWindows" Tag="Windows" IsCheckable="True" Click="MiTheme_Click"/>
                 <MenuItem x:Name="MiThemeGarden"  Tag="Garden"  IsCheckable="True" Click="MiTheme_Click"/>
             </MenuItem>
+            <MenuItem x:Name="MiFontSize">
+                <MenuItem x:Name="MiFont11" Tag="11" IsCheckable="True" Click="MiFontSize_Click"/>
+                <MenuItem x:Name="MiFont13" Tag="13" IsCheckable="True" Click="MiFontSize_Click"/>
+                <MenuItem x:Name="MiFont15" Tag="15" IsCheckable="True" Click="MiFontSize_Click"/>
+                <MenuItem x:Name="MiFont18" Tag="18" IsCheckable="True" Click="MiFontSize_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="MiQrPanel" IsCheckable="True" Click="MiQrPanel_Click"/>
             <MenuItem x:Name="MiUser">
                 <MenuItem x:Name="MiSwitchUser"  Click="MiSwitchUser_Click"/>
                 <MenuItem x:Name="MiManageUsers" Click="MiManageUsers_Click"/>
@@ -101,7 +108,7 @@
         </StatusBar>
 
         <!-- QR-коды: Android + iPhone -->
-        <Border DockPanel.Dock="Right" Width="158"
+        <Border x:Name="QrPanel" DockPanel.Dock="Right" Width="158"
                 BorderBrush="#c5e0c5" BorderThickness="1,0,0,0"
                 Background="{DynamicResource HA.Panel.Bg}" Padding="10,14,10,10">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">

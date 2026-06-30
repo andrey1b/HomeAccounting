@@ -23,6 +23,7 @@ public partial class App : Application
         var settings = AppSettings.Load();
         AppLoc.SetLang(settings.Lang);
         ThemeService.Apply(settings.Theme);
+        Resources["HA.Table.FontSize"] = (double)settings.TableFontSize;
 
         // Экран входа с выбором пользователя и паролем
         var login = new Views.LoginWindow();

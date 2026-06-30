@@ -41,12 +41,8 @@ public partial class MainWindow : Window
 
         InitializeComponent();
 
-        _tableFontSize = s0.TableFontSize > 0 ? s0.TableFontSize : 9f;
-        if (_tableFontSize != 9f)
-        {
-            ApplyFontToDg(DgvExpenses, _tableFontSize);
-            ApplyFontToDg(DgvIncomes,  _tableFontSize);
-        }
+        _tableFontSize = s0.TableFontSize > 0 ? s0.TableFontSize : 13f;
+        if (!s0.ShowQrPanel) QrPanel.Visibility = System.Windows.Visibility.Collapsed;
 
         var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version!;
         Title = $"HomeAccounting v{ver.Major}.{ver.Minor}.{ver.Build}";
@@ -273,6 +269,15 @@ public partial class MainWindow : Window
         MiThemeGarden.Header  = AppLoc.T("theme_garden");
         MiThemeWindows.IsChecked = ThemeService.Current == "Windows";
         MiThemeGarden.IsChecked  = ThemeService.Current == "Garden";
+
+        MiFontSize.Header = AppLoc.T("menu_font_size");
+        MiFont11.Header   = AppLoc.T("font_small");
+        MiFont13.Header   = AppLoc.T("font_normal");
+        MiFont15.Header   = AppLoc.T("font_large");
+        MiFont18.Header   = AppLoc.T("font_xlarge");
+        UpdateFontMenuChecks();
+        MiQrPanel.Header    = AppLoc.T("menu_qr_panel");
+        MiQrPanel.IsChecked = QrPanel.Visibility == Visibility.Visible;
 
         // Accounts sub-tab: Brief
         BtnAddAccount.Content    = AppLoc.T("btn_add");
@@ -705,20 +710,37 @@ public partial class MainWindow : Window
 
     // ─── Размер шрифта таблиц ────────────────────────────────────────────────
 
-    private void ApplyFontToDg(DataGrid dg, float fontSize)
-    {
-        dg.FontSize  = fontSize;
-        dg.RowHeight = fontSize + 10;
-    }
-
+    // Размер шрифта таблиц задаётся ресурсом HA.Table.FontSize (используется стилем DataGrid во всех окнах)
     private void SetTableFontSize(float size)
     {
-        _tableFontSize = Math.Clamp(size, 8f, 22f);
-        ApplyFontToDg(DgvExpenses, _tableFontSize);
-        ApplyFontToDg(DgvIncomes,  _tableFontSize);
+        _tableFontSize = Math.Clamp(size, 8f, 30f);
+        Application.Current.Resources["HA.Table.FontSize"] = (double)_tableFontSize;
         var s = AppSettings.Load();
         s.TableFontSize = _tableFontSize;
         s.Save();
+        UpdateFontMenuChecks();
+    }
+
+    private void UpdateFontMenuChecks()
+    {
+        int sz = (int)_tableFontSize;
+        MiFont11.IsChecked = sz == 11;
+        MiFont13.IsChecked = sz == 13;
+        MiFont15.IsChecked = sz == 15;
+        MiFont18.IsChecked = sz == 18;
+    }
+
+    private void MiFontSize_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && float.TryParse((string)mi.Tag, out var sz))
+            SetTableFontSize(sz);
+    }
+
+    private void MiQrPanel_Click(object sender, RoutedEventArgs e)
+    {
+        bool show = MiQrPanel.IsChecked;
+        QrPanel.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+        var s = AppSettings.Load(); s.ShowQrPanel = show; s.Save();
     }
 
     private void BtnFontMinus_Click(object sender, RoutedEventArgs e) => SetTableFontSize(_tableFontSize - 1f);

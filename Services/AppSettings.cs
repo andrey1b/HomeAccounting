@@ -8,7 +8,8 @@ public class AppSettings
     public string Theme            { get; set; } = "Garden";    // Garden | Windows
     public string XmlWatchFolder   { get; set; } = "";
     public int?   DefaultAccountId { get; set; } = null;
-    public float  TableFontSize    { get; set; } = 9f;
+    public float  TableFontSize    { get; set; } = 13f;
+    public bool   ShowQrPanel      { get; set; } = true;
     public double WindowTop        { get; set; } = double.NaN;
     public double WindowLeft       { get; set; } = double.NaN;
     public double WindowWidth      { get; set; } = 1100;

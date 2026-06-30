@@ -10,6 +10,12 @@ public static class AppLoc
         // Language menu
         ["menu_lang"]    = ["Мова",    "Язык",    "Language"],
         ["menu_table_theme"] = ["Фон таблиць", "Фон таблиц", "Table background"],
+        ["menu_font_size"]   = ["Розмір шрифту", "Размер шрифта", "Font size"],
+        ["font_small"]       = ["Маленький", "Маленький", "Small"],
+        ["font_normal"]      = ["Звичайний", "Обычный",   "Normal"],
+        ["font_large"]       = ["Великий",   "Крупный",   "Large"],
+        ["font_xlarge"]      = ["Дуже великий", "Очень крупный", "Extra large"],
+        ["menu_qr_panel"]    = ["Бічна панель QR", "Боковая панель QR", "QR side panel"],
         ["theme_windows"]    = ["Windows",     "Windows",    "Windows"],
         ["theme_garden"]     = ["Garden (Сад)", "Garden (Сад)", "Garden"],
         ["lang_ru"]      = ["Русский",    "Русский",    "Russian"],

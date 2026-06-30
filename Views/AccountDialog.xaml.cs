@@ -7,7 +7,9 @@ public partial class AccountDialog : Window
     public Account Result { get; private set; } = new();
 
     private static readonly string[] Icons =
-        ["💰", "🏦", "💳", "💵", "🏠", "🚗", "🛒", "📱", "✈️", "🎁", "💊", "🍕", "📊", "🏥", "📚", "🎓", "🌐", "🏧"];
+        ["💵", "💳", "🏦", "🐷", "🪙", "💶", "💷", "💴", "🏧", "💰",
+         "🟢", "🔴", "🔵", "🟡", "🟠", "🟣", "🟤", "⭐", "📈", "📊",
+         "🏠", "🚗", "🛒", "📱", "✈️", "🎁", "💊", "🎓", "🌐", "👛"];
 
     private static readonly string[] Currencies = ["₴", "$", "€"];
 
