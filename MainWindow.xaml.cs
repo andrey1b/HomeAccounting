@@ -50,6 +50,8 @@ public partial class MainWindow : Window
         ApplyLoc();
         InitFilters();
         GeneratePhoneQr();
+        LoadAiSettings();
+        InitAiQuestionsTab();
         RefreshAccounts(null, null);
         AppLoc.Changed += () => Dispatcher.Invoke(OnLangChanged);
         SetStatus(AppLoc.T("status_watching"));
@@ -195,6 +197,19 @@ public partial class MainWindow : Window
         TabAccounts.Header = AppLoc.T("tab_accounts");
         TabExpenses.Header = AppLoc.T("tab_expenses");
         TabIncomes.Header  = AppLoc.T("tab_incomes");
+
+        // Вкладка «Спросить у ИИ»
+        TabAi.Header            = AppLoc.T("ai_tab");
+        TbAiQuestionLbl.Text    = AppLoc.T("ai_question");
+        btnAiAsk.Content        = AppLoc.T("ai_ask");
+        btnAiSaveAll.Content    = AppLoc.T("ai_save_all");
+        btnAiClear.Content      = AppLoc.T("ai_clear");
+        btnAiApiKeys.Content    = AppLoc.T("ai_api_keys");
+        TbAiQuickLbl.Text       = AppLoc.T("ai_quick");
+        btnAiQuickSave.Content  = AppLoc.T("ai_qb_save");
+        btnAiQuickPlan.Content  = AppLoc.T("ai_qb_plan");
+        btnAiQuickBudget.Content= AppLoc.T("ai_qb_budget");
+        RefreshAiRowLabels();
 
         TabShopping.Header   = AppLoc.T("tab_shopping");
         BtnShopAll.Content   = AppLoc.T("shop_all");

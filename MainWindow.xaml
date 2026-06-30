@@ -689,6 +689,67 @@
                 </Border>
             </TabItem>
 
+            <!-- ===== ASK-AI TAB ===== -->
+            <TabItem x:Name="TabAi">
+                <DockPanel>
+                    <Border DockPanel.Dock="Top" Background="{DynamicResource HA.Panel.Bg}" Padding="10,8">
+                        <StackPanel>
+                            <DockPanel LastChildFill="True">
+                                <TextBlock x:Name="TbAiQuestionLbl" DockPanel.Dock="Left" VerticalAlignment="Center"
+                                           FontSize="14" Margin="2,0,8,0"/>
+                                <Button x:Name="btnAiApiKeys" DockPanel.Dock="Right" Margin="4,0,0,0"/>
+                                <Button x:Name="btnAiClear"   DockPanel.Dock="Right" Margin="4,0,0,0"/>
+                                <Button x:Name="btnAiSaveAll" DockPanel.Dock="Right" Margin="4,0,0,0"/>
+                                <Button x:Name="btnAiAsk"     DockPanel.Dock="Right" Margin="4,0,0,0" FontWeight="Bold"/>
+                                <TextBox x:Name="txAiQuestion" FontSize="14" Height="32"
+                                         VerticalContentAlignment="Center" Margin="0,0,8,0"/>
+                            </DockPanel>
+                            <WrapPanel Margin="0,6,0,0">
+                                <TextBlock x:Name="TbAiQuickLbl" VerticalAlignment="Center" FontSize="12" Margin="2,0,6,0"/>
+                                <Button x:Name="btnAiQuickSave"   Margin="0,0,6,0" Padding="8,2" FontSize="12"/>
+                                <Button x:Name="btnAiQuickPlan"   Margin="0,0,6,0" Padding="8,2" FontSize="12"/>
+                                <Button x:Name="btnAiQuickBudget" Margin="0,0,6,0" Padding="8,2" FontSize="12"/>
+                            </WrapPanel>
+                            <TextBlock x:Name="lblAiStatus" Margin="2,5,0,0" FontSize="11" Foreground="DimGray"/>
+                        </StackPanel>
+                    </Border>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Background="{DynamicResource HA.Panel.Bg}">
+                        <ItemsControl x:Name="icAiRows">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#c5e0c5" BorderThickness="0,0,0,1" Padding="0,2">
+                                        <Grid Height="186" Margin="6,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="140"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="120"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="0" FontSize="15" Margin="5" Foreground="White"
+                                                    VerticalAlignment="Top" Height="40"
+                                                    Content="{Binding Name}" Background="{Binding HeaderBrush}"
+                                                    Click="AiOpenButton_Click"/>
+                                            <TextBox Grid.Column="1" Margin="3,5"
+                                                     Text="{Binding Response, UpdateSourceTrigger=PropertyChanged}"
+                                                     Foreground="{Binding ResponseBrush}" AcceptsReturn="True" TextWrapping="Wrap"
+                                                     VerticalScrollBarVisibility="Auto" FontSize="12"/>
+                                            <StackPanel Grid.Column="2" Margin="3,5,5,5">
+                                                <CheckBox IsChecked="{Binding Enabled}" Margin="2,2,0,8"/>
+                                                <Button Content="{Binding CopyLabel}" FontSize="11" Margin="0,0,0,4"
+                                                        Padding="6,3" Click="AiCopyButton_Click"/>
+                                                <Button Content="{Binding SaveLabel}" FontSize="11"
+                                                        Padding="6,3" Click="AiSaveButton_Click"/>
+                                                <TextBlock Text="{Binding Stats}" Margin="2,8,0,0" FontSize="11"
+                                                           TextWrapping="Wrap" Foreground="#5A5A5A"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
+            </TabItem>
+
         </TabControl>
     </DockPanel>
 </Window>
