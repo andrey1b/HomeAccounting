@@ -6,10 +6,10 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>HomeAccounting</RootNamespace>
-    <AssemblyName>HomeAccounting_v4.4.9</AssemblyName>
+    <AssemblyName>HomeAccounting_v4.5.0</AssemblyName>
     <StartupObject>HomeAccounting.App</StartupObject>
-    <Version>4.4.9</Version>
-    <FileVersion>4.4.9.0</FileVersion>
+    <Version>4.5.0</Version>
+    <FileVersion>4.5.0.0</FileVersion>
     <Copyright>Офис пенсионера</Copyright>
     <ApplicationIcon>Resources\app.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>

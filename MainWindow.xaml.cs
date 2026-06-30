@@ -325,7 +325,7 @@ public partial class MainWindow : Window
         TbExpTodayLbl.Text       = AppLoc.T("lbl_today");
         TbExpWeekLbl.Text        = AppLoc.T("lbl_week");
         TbExpMonthLbl.Text       = AppLoc.T("lbl_month");
-        TbExpFilterLbl.Text      = AppLoc.T("lbl_filter_total");
+        TbExpFilterLbl.Text      = AppLoc.T(CbExpFilter.IsChecked == true ? "lbl_filter_total" : "lbl_exp_total");
 
         // Заголовки столбцов таблицы расходов (0=Дата,1=Счёт,2=Кат,3=Подкат,4=Ед,5=Кол,6=Сумма,7=Прим)
         if (DgvExpenses.Columns.Count == 8)
@@ -353,7 +353,7 @@ public partial class MainWindow : Window
         TbIncTodayLbl.Text       = AppLoc.T("lbl_today");
         TbIncWeekLbl.Text       = AppLoc.T("lbl_week");
         TbIncMonthLbl.Text      = AppLoc.T("lbl_month");
-        TbIncFilterLbl.Text     = AppLoc.T("lbl_filter_total");
+        TbIncFilterLbl.Text     = AppLoc.T(CbIncFilter.IsChecked == true ? "lbl_filter_total" : "lbl_inc_total");
 
         // Заголовки столбцов таблицы доходов
         if (DgvIncomes.Columns.Count == 8)
@@ -933,6 +933,7 @@ public partial class MainWindow : Window
             TbExpWeek.Text   = $"{summary.Week:N2} ₴";
             TbExpMonth.Text  = $"{summary.Month:N2} ₴";
             var expTotal = _expenseRows.Sum(r => r.Amount * (1 - r.Discount / 100));
+            TbExpFilterLbl.Text = AppLoc.T(CbExpFilter.IsChecked == true ? "lbl_filter_total" : "lbl_exp_total");
             TbExpTotal.Text    = $"{expTotal:N2} ₴";
             TbExpRowCount.Text = $"Строк: {_expenseRows.Count}";
             TbExpRowTotal.Text = $"{expTotal:N2} ₴";
@@ -1051,6 +1052,7 @@ public partial class MainWindow : Window
             TbIncWeek.Text   = $"{summary.Week:N2} ₴";
             TbIncMonth.Text  = $"{summary.Month:N2} ₴";
             var incTotal = _incomeRows.Sum(r => r.Amount);
+            TbIncFilterLbl.Text = AppLoc.T(CbIncFilter.IsChecked == true ? "lbl_filter_total" : "lbl_inc_total");
             TbIncTotal.Text    = $"{incTotal:N2} ₴";
             TbIncRowCount.Text = $"Строк: {_incomeRows.Count}";
             TbIncRowTotal.Text = $"{incTotal:N2} ₴";

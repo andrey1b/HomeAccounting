@@ -125,6 +125,8 @@ public static class AppLoc
         ["lbl_week"]         = ["Тиждень:",        "Неделя:",          "Week:"],
         ["lbl_month"]        = ["Місяць:",         "Месяц:",           "Month:"],
         ["lbl_filter_total"] = ["Всього у фільтрі:","Всего в фильтре:", "Filter total:"],
+        ["lbl_exp_total"]    = ["Всього витрати:", "Всего расходы:",   "Total expenses:"],
+        ["lbl_inc_total"]    = ["Всього доходи:",  "Всего доходы:",    "Total incomes:"],
 
         // Column headers (no colon)
         ["col_num"]         = ["№",            "№",             "#"],
