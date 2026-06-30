@@ -55,6 +55,131 @@ public partial class MainWindow : Window
         RefreshAccounts(null, null);
         AppLoc.Changed += () => Dispatcher.Invoke(OnLangChanged);
         SetStatus(AppLoc.T("status_watching"));
+
+        // Приём черновиков расходов из других программ Senior Hub (после показа окна)
+        Loaded += (_, _) => ProcessExpenseDrafts();
+    }
+
+    // ─── Приём расходов из других программ Senior Hub (очередь черновиков) ────
+
+    private void ProcessExpenseDrafts()
+    {
+        List<ExpenseDraft> drafts = ExpenseDraftQueue.ReadAll();
+        if (drafts.Count == 0) return;
+
+        // Диалог со списком черновиков и чекбоксами (все отмечены)
+        var panel = new StackPanel { Margin = new Thickness(16) };
+        panel.Children.Add(new TextBlock
+        {
+            Text = $"Другие программы предлагают записать расходы ({drafts.Count}). Отметьте, что добавить:",
+            TextWrapping = TextWrapping.Wrap, FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 0, 0, 10)
+        });
+
+        var checks = new List<(CheckBox Cb, ExpenseDraft Draft)>();
+        var listPanel = new StackPanel();
+        foreach (var d in drafts)
+        {
+            string sub = string.IsNullOrWhiteSpace(d.Subcategory) ? "" : " / " + d.Subcategory;
+            string note = string.IsNullOrWhiteSpace(d.Note) ? "" : "  «" + d.Note + "»";
+            var cb = new CheckBox
+            {
+                IsChecked = true, Margin = new Thickness(0, 2, 0, 2),
+                Content = $"{d.Source}:  {d.Date}  ·  {d.Category}{sub}  ·  {d.Amount:N2} ₴{note}"
+            };
+            checks.Add((cb, d));
+            listPanel.Children.Add(cb);
+        }
+        panel.Children.Add(new ScrollViewer
+        {
+            Content = listPanel, MaxHeight = 320,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+        });
+
+        var btnRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right,
+            Margin = new Thickness(0, 12, 0, 0)
+        };
+        var addBtn   = new Button { Content = "Добавить отмеченные", Padding = new Thickness(14, 6, 14, 6), Margin = new Thickness(0, 0, 8, 0), IsDefault = true };
+        var laterBtn = new Button { Content = "Позже", Padding = new Thickness(14, 6, 14, 6), IsCancel = true };
+        btnRow.Children.Add(addBtn);
+        btnRow.Children.Add(laterBtn);
+        panel.Children.Add(btnRow);
+
+        var win = new Window
+        {
+            Title = "Расходы из других программ", Owner = this,
+            Width = 580, SizeToContent = SizeToContent.Height,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            ResizeMode = ResizeMode.NoResize, Content = panel
+        };
+        addBtn.Click   += (_, _) => win.DialogResult = true;
+        laterBtn.Click += (_, _) => win.DialogResult = false;
+
+        if (win.ShowDialog() != true) return;   // «Позже» — оставить очередь как есть
+
+        // Определяем счёт по умолчанию (как при импорте чеков)
+        int defAcc = AppSettings.Load().DefaultAccountId ?? 0;
+        if (defAcc <= 0)
+        {
+            var accs = AccountService.GetAll();
+            defAcc = accs.Count > 0 ? accs[0].Id : 0;
+        }
+
+        var cats = CategoryService.GetAll("expense");
+        var processed = new List<string>();
+        int added = 0;
+
+        foreach (var (cb, d) in checks)
+        {
+            if (cb.IsChecked != true) continue;   // не отмечено — оставить в очереди
+            try
+            {
+                int catId = ResolveCategoryId(cats, d.Category);
+                int? subId = string.IsNullOrWhiteSpace(d.Subcategory) ? null : ResolveSubcategoryId(catId, d.Subcategory!);
+                DateTime date = DateTime.TryParse(d.Date, out var dt) ? dt : DateTime.Today;
+                ExpenseService.Add(new Models.Expense
+                {
+                    Date = date,
+                    AccountId = defAcc > 0 ? defAcc : (int?)null,
+                    CategoryId = catId,
+                    SubcategoryId = subId,
+                    Amount = d.Amount,
+                    Discount = 0,
+                    Note = string.IsNullOrWhiteSpace(d.Note) ? $"из «{d.Source}»" : d.Note
+                });
+                processed.Add(d.Id);
+                added++;
+            }
+            catch { /* пропускаем проблемный черновик, не валим остальные */ }
+        }
+
+        ExpenseDraftQueue.RemoveByIds(processed);
+
+        RefreshAccounts(null, null);
+        if (MainTabs.SelectedIndex == 1) RefreshExpenses();
+
+        MessageBox.Show(this,
+            $"Добавлено расходов: {added}.\nПроверьте их на вкладке «Расходы».",
+            "Senior Hub", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    // Найти категорию по имени (без учёта регистра) или создать новую расходную.
+    private static int ResolveCategoryId(List<Models.Category> cats, string name)
+    {
+        var found = cats.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
+        if (found != null) return found.Id;
+        int id = CategoryService.AddCategory(name, "expense");
+        cats.Add(new Models.Category { Id = id, Name = name, Type = "expense" });
+        return id;
+    }
+
+    // Найти подкатегорию по имени или создать новую в указанной категории.
+    private static int ResolveSubcategoryId(int categoryId, string name)
+    {
+        var subs = CategoryService.GetSubcategories(categoryId);
+        var found = subs.FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
+        return found?.Id ?? CategoryService.AddSubcategory(categoryId, name);
     }
 
     // ─── Receipt import notification ─────────────────────────────────────────
