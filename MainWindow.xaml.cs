@@ -41,7 +41,7 @@ public partial class MainWindow : Window
 
         InitializeComponent();
 
-        _tableFontSize = s0.TableFontSize > 0 ? s0.TableFontSize : 13f;
+        _tableFontSize = s0.TableFontSize > 0 ? s0.TableFontSize : 15f;
         if (!s0.ShowQrPanel) QrPanel.Visibility = System.Windows.Visibility.Collapsed;
 
         var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version!;
@@ -270,11 +270,11 @@ public partial class MainWindow : Window
         MiThemeWindows.IsChecked = ThemeService.Current == "Windows";
         MiThemeGarden.IsChecked  = ThemeService.Current == "Garden";
 
-        MiFontSize.Header = AppLoc.T("menu_font_size");
-        MiFont11.Header   = AppLoc.T("font_small");
-        MiFont13.Header   = AppLoc.T("font_normal");
-        MiFont15.Header   = AppLoc.T("font_large");
-        MiFont18.Header   = AppLoc.T("font_xlarge");
+        MiFontSize.Header   = AppLoc.T("menu_font_size");
+        MiFontSmall.Header  = AppLoc.T("font_small");
+        MiFontNormal.Header = AppLoc.T("font_normal");
+        MiFontLarge.Header  = AppLoc.T("font_large");
+        MiFontXLarge.Header = AppLoc.T("font_xlarge");
         UpdateFontMenuChecks();
         MiQrPanel.Header    = AppLoc.T("menu_qr_panel");
         MiQrPanel.IsChecked = QrPanel.Visibility == Visibility.Visible;
@@ -724,10 +724,10 @@ public partial class MainWindow : Window
     private void UpdateFontMenuChecks()
     {
         int sz = (int)_tableFontSize;
-        MiFont11.IsChecked = sz == 11;
-        MiFont13.IsChecked = sz == 13;
-        MiFont15.IsChecked = sz == 15;
-        MiFont18.IsChecked = sz == 18;
+        MiFontSmall.IsChecked  = sz == 13;
+        MiFontNormal.IsChecked = sz == 15;
+        MiFontLarge.IsChecked  = sz == 18;
+        MiFontXLarge.IsChecked = sz == 22;
     }
 
     private void MiFontSize_Click(object sender, RoutedEventArgs e)

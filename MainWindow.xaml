@@ -1,12 +1,14 @@
 <Window x:Class="HomeAccounting.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:svc="clr-namespace:HomeAccounting.Services"
         Title="HomeAccounting"
         Width="1100" Height="680" MinWidth="820" MinHeight="520"
         WindowStartupLocation="CenterScreen"
         Loaded="MainWindow_Loaded" Closing="MainWindow_Closing">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <svc:IconColorConverter x:Key="IconColor"/>
         <Style x:Key="LinkButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -16,6 +18,7 @@
         </Style>
         <Style x:Key="IconCell" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
@@ -78,10 +81,10 @@
                 <MenuItem x:Name="MiThemeGarden"  Tag="Garden"  IsCheckable="True" Click="MiTheme_Click"/>
             </MenuItem>
             <MenuItem x:Name="MiFontSize">
-                <MenuItem x:Name="MiFont11" Tag="11" IsCheckable="True" Click="MiFontSize_Click"/>
-                <MenuItem x:Name="MiFont13" Tag="13" IsCheckable="True" Click="MiFontSize_Click"/>
-                <MenuItem x:Name="MiFont15" Tag="15" IsCheckable="True" Click="MiFontSize_Click"/>
-                <MenuItem x:Name="MiFont18" Tag="18" IsCheckable="True" Click="MiFontSize_Click"/>
+                <MenuItem x:Name="MiFontSmall"  Tag="13" IsCheckable="True" Click="MiFontSize_Click"/>
+                <MenuItem x:Name="MiFontNormal" Tag="15" IsCheckable="True" Click="MiFontSize_Click"/>
+                <MenuItem x:Name="MiFontLarge"  Tag="18" IsCheckable="True" Click="MiFontSize_Click"/>
+                <MenuItem x:Name="MiFontXLarge" Tag="22" IsCheckable="True" Click="MiFontSize_Click"/>
             </MenuItem>
             <MenuItem x:Name="MiQrPanel" IsCheckable="True" Click="MiQrPanel_Click"/>
             <MenuItem x:Name="MiUser">
@@ -201,21 +204,33 @@
                             </Border>
 
                             <DataGrid x:Name="DgAccounts" AutoGenerateColumns="False" IsReadOnly="True"
-                                      GridLinesVisibility="Horizontal"                                      MouseDoubleClick="DgAccounts_DoubleClick"
+                                      GridLinesVisibility="Horizontal" MouseDoubleClick="DgAccounts_DoubleClick"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                       SelectionChanged="DgAccounts_SelectionChanged"
                                       LoadingRow="DgAccounts_LoadingRow">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn x:Name="ColAccNum"     Binding="{Binding RowNumber}"  Width="36"/>
-                                    <DataGridTextColumn x:Name="ColAccIcon"    Binding="{Binding Icon}"       Width="44"
-                                                        ElementStyle="{StaticResource IconCell}"/>
-                                    <DataGridTextColumn x:Name="ColAccName"    Width="2*"/>
-                                    <DataGridTextColumn x:Name="ColAccExpense" Binding="{Binding ExpenseStr}" Width="130"
+                                    <DataGridTextColumn x:Name="ColAccNum"     Binding="{Binding RowNumber}"  Width="44"/>
+                                    <DataGridTemplateColumn x:Name="ColAccIcon" Width="52">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Border Width="34" Height="26" CornerRadius="5"
+                                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                        Background="{Binding Icon, Converter={StaticResource IconColor}}">
+                                                    <TextBlock Text="{Binding Icon}" FontFamily="Segoe UI Emoji"
+                                                               FontSize="14" Foreground="White"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn x:Name="ColAccName"    Width="220"/>
+                                    <DataGridTextColumn x:Name="ColAccExpense" Binding="{Binding ExpenseStr}" Width="140"
                                                         ElementStyle="{StaticResource RedCell}"/>
-                                    <DataGridTextColumn x:Name="ColAccIncome"  Binding="{Binding IncomeStr}"  Width="130"
+                                    <DataGridTextColumn x:Name="ColAccIncome"  Binding="{Binding IncomeStr}"  Width="140"
                                                         ElementStyle="{StaticResource GreenCell}"/>
-                                    <DataGridTextColumn x:Name="ColAccBalance" Binding="{Binding BalanceStr}" Width="130"
+                                    <DataGridTextColumn x:Name="ColAccBalance" Binding="{Binding BalanceStr}" Width="140"
                                                         ElementStyle="{StaticResource GreenCell}"/>
-                                    <DataGridTextColumn x:Name="ColAccNote"    Binding="{Binding Note}"       Width="3*"/>
+                                    <DataGridTextColumn x:Name="ColAccNote"    Binding="{Binding Note}"       Width="600"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </DockPanel>
